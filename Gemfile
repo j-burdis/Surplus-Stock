@@ -40,6 +40,7 @@ gem "bootsnap", require: false
 # gem "sassc-rails"
 gem "tailwindcss-rails"
 gem "simple_form", github: "heartcombo/simple_form"
+gem "devise"
 
 group :development, :test do
   gem "dotenv-rails"
