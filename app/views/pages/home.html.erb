@@ -3,13 +3,14 @@
     class="bg-center w-full h-[400px] bg-cover flex items-center justify-center"
     style="background-image: url('<%= asset_path('home-bg-img.avif') %>');"
   >
-    <h1 class="text-blue-800 text-4xl font-bold drop-shadow-sm">
-      Surplus Stock Shop  
-    </h1>
+    <div class="flex-col justify-items-center">
+      <h1 class="text-blue-800 text-4xl font-bold drop-shadow-sm">
+        Surplus Stock Shop  
+      </h1>
 
-    <p>
-      <%# <%= link_to 'Search', items_path, class: 'btn-primary' %> %>
-    </p>
+      
+      <%= link_to 'Search', items_path, class: 'btn-primary mt-5 inline-block' %>
+    </div>
   </div>
     
   <div class="flex-col items-center justify-items-center py-4 px-5">
@@ -17,9 +18,16 @@
       About us
     </h1>
     <p class="max-w-[800px] py-2 text-center">
-      We're a furniture store based in Northumberland with second store in Carlisle,
-      we supply customers all over the North East and Cumbria whether it's beds, sofas
-      or tables and more!
+      We specialise in offering high-quality furniture at unbeatable prices. 
+      From comfortable beds and mattresses to stylish sofas, we provide everything you need to 
+      furnish your home without breaking the bank. Our goal is to make quality furniture accessible 
+      to everyone, with a focus on affordability and customer satisfaction.
+      <br>
+      <br>
+      We are committed to providing affordable, stylish furniture for homes across the North East and Cumbria, 
+      and our reliable delivery service ensures that your purchases reach you with ease. Whether you're furnishing 
+      a new home or updating your space, we have something for every need and budget. Visit us today and discover 
+      the perfect pieces for your home at unbeatable prices.
     </p>
   </div>
 </div>

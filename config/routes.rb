@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
-  get "baskets/show"
-  get "orders/create"
-  get "orders/index"
-  get "orders/show"
-  get "basket_items/create"
-  get "basket_items/destroy"
-  get "items/index"
-  get "items/show"
+  # get "baskets/show"
+  # get "orders/create"
+  # get "orders/index"
+  # get "orders/show"
+  # get "basket_items/create"
+  # get "basket_items/destroy"
+  # get "items/index"
+  # get "items/show"
+
   devise_for :users
-  root to: "pages#home"
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -21,4 +22,10 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  root to: "pages#home"
+  resources :items, only: [:index, :show]
+  resources :basket_items, only: [:create, :destroy]
+  resources :orders, only: [:create, :index, :show]
+  resources :baskets, only: [:show]
+
 end
