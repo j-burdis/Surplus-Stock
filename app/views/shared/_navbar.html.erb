@@ -2,9 +2,11 @@
   <h1 class="text-2xl font-bold text-blue-800">
     <%= link_to 'Surplus Stock', root_path %>
   </h1>
-  <div>
+  <div class="flex justify-center items-center space-x-4">
     <% if user_signed_in? %>
-      <p>Welcome</p>
+      <p>My account</p>
+      <p>Basket</p>
+      <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'btn-primary' %>
     <% else %>
       <p>
         <%= link_to 'Sign in', new_user_session_path, class: 'btn-primary' %>
