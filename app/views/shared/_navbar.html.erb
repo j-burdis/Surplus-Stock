@@ -1,0 +1,16 @@
+<div class="flex justify-between sticky top-0 w-full bg-white shadow-sm p-4">
+  <h1 class="text-2xl font-bold text-blue-800">
+    <%= link_to 'Surplus Stock', root_path %>
+  </h1>
+  <div>
+    <% if user_signed_in? %>
+      <p>Welcome</p>
+    <% else %>
+      <p>
+        <%= link_to 'Sign in', new_user_session_path, class: 'btn-primary' %>
+        or
+        <%= link_to 'Sign up', new_user_registration_path, class: 'btn-primary' %>
+      </p>
+    <%  end %>
+  </div>
+</div>
