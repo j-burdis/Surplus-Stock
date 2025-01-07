@@ -1,4 +1,17 @@
-<div>
-  <h1 class="font-bold text-4xl">Items#show</h1>
-  <p>Find me in app/views/items/show.html.erb</p>
+<div class="p-4">
+  <div class="flex">
+    <img src="<%= @item.image_url %>" class="w-1/2"/>
+    <div class="flex flex-col p-2">
+      <p class="pb-2"><%= @item.name %></p>
+      <p class="pb-2"><%= @item.description %></p>
+      <p class="pb-2">Dimensions: </p>
+      <p class="pb-2">Stock remaining: <%= @item.stock%></p>
+      <div class="pb-2 flex justify-content text-center">
+        <p>£<%= @item.price.round(0) %></p>
+        <div class="pl-32">
+          <p>Add to basket - 1 +<p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
