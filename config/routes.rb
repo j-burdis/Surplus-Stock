@@ -1,13 +1,4 @@
 Rails.application.routes.draw do
-  # get "baskets/show"
-  # get "orders/create"
-  # get "orders/index"
-  # get "orders/show"
-  # get "basket_items/create"
-  # get "basket_items/destroy"
-  # get "items/index"
-  # get "items/show"
-
   devise_for :users
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -29,14 +29,6 @@ export default class extends Controller {
 
     this.hiddenQuantityTarget.value = quantityValue
     console.log("Hidden quantity set to:", this.hiddenQuantityTarget.value)
-
-    // Update hidden input with same value
-    // if (quantityValue > 0) {
-    //   this.hiddenQuantityTarget.value = quantityValue;
-    // } else {
-    //   this.hiddenQuantityTarget.value = 1;
-    // }
-    // console.log("Hidden quantity set to:", this.hiddenQuantityTarget.value);
   }
 
   // This method will ensure that the hidden input is updated before the form is submitted

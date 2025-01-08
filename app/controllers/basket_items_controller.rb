@@ -3,8 +3,6 @@ class BasketItemsController < ApplicationController
   def create
     item = Item.find(params[:item_id])
     quantity = params[:quantity].to_i
-    Rails.logger.info("Adding item with ID #{item.id} and quantity #{quantity} to basket")
-
     basket = current_user.basket || Basket.create(user: current_user)
     basket_item = basket.basket_items.find_by(item: item)
 
@@ -12,15 +10,8 @@ class BasketItemsController < ApplicationController
       # Increment the quantity by the value passed from the form
       basket_item.update(quantity: basket_item.quantity + quantity)
     else
-      new_basket_item = basket.basket_items.create(item: item, quantity: quantity)
-
-      if new_basket_item.save
-        Rails.logger.info("Basket item successfully created: #{new_basket_item.inspect}")
-      else
-        Rails.logger.error("Basket item failed to save: #{new_basket_item.errors.full_messages}")
-      end
+      basket.basket_items.create(item: item, quantity: quantity)
     end
-
     redirect_to basket_path, notice: "#{item.name} has been added to your basket."
   end
 
