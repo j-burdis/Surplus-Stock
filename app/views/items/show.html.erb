@@ -11,7 +11,7 @@
         <div class="pb-2 flex justify-between text-center">
           <p>£<%= @item.price.round(0) %></p>
           <div>
-            <p><%= link_to "Add to basket", basket_items_path, class: 'btn-primary' %> - 1 +<p>
+            <p><%= button_to "Add to basket", basket_items_path(item_id: @item.id), method: :post, class: 'btn-primary' %> - 1 +<p>
           </div>
         </div>
       </div>
