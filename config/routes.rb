@@ -26,6 +26,6 @@ Rails.application.routes.draw do
   resources :items, only: [:index, :show]
   resources :basket_items, only: [:create, :destroy]
   resources :orders, only: [:create, :index, :show]
-  resources :baskets, only: [:show]
+  resource :basket, only: [:show]
 
 end

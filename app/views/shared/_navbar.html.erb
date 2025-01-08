@@ -5,7 +5,9 @@
   <div class="flex justify-center items-center space-x-4">
     <% if user_signed_in? %>
       <p>My account</p>
-      <p>Basket</p>
+      <p>
+        <%= link_to 'Basket', basket_path %>
+      </p>
       <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'btn-primary' %>
     <% else %>
       <p>
