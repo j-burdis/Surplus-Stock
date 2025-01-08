@@ -9,7 +9,8 @@ class BasketItemsController < ApplicationController
     basket_item = basket.basket_items.find_by(item: item)
 
     if basket_item
-      basket_item.increment!(:quantity, quantity)
+      # Increment the quantity by the value passed from the form
+      basket_item.update(quantity: basket_item.quantity + quantity)
     else
       new_basket_item = basket.basket_items.create(item: item, quantity: 1)
 

@@ -1,10 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["hiddenQuantity"];
+  static targets = ["quantityInput", "hiddenQuantity"];
 
   connect() {
     console.log("Basket controller connected");
+    // Ensure hidden input is initially synced with visible input
+    this.updateHiddenQuantity();
   }
 
   validateQuantity(event) {
@@ -13,10 +15,11 @@ export default class extends Controller {
     input.value = value; // Ensure input value stays within bounds
   }  
 
-  updateHiddenQuantity(event) {
-    const input = event.target;
-    if (this.hiddenQuantityTarget) {
-      this.hiddenQuantityTarget.value = input.value; // Sync hidden field with visible input
-    }
+  updateHiddenQuantity() {
+    // Get value from visible input
+    const quantityValue = this.quantityInputTarget.value;
+
+    // Update hidden input with same value
+    this.hiddenQuantityTarget.value = quantityValue;
   }
 }
