@@ -1,19 +1,22 @@
 <div class="p-4">
   <h1 class="font-bold text-4xl">My basket</h1>
   <% if @basket_items.any? %>
-    <div data-controller="basket">
-      <% @basket_items.each do |basket_item| %>
+    <% @basket_items.each do |basket_item| %>
+      <div data-controller="basket">
         <p>
           <%= basket_item.item.name %>: 
           <%= form_with(model: basket_item, method: :patch) do |form| %>
-            <%= form.number_field :quantity, min: 1, max: basket_item.item.stock, value: basket_item.quantity, class: 'quantity-input', data: { action: "input->basket#validateQuantity" } %>
+            <%= form.number_field :quantity, min: 1, max: basket_item.item.stock, 
+                                  value: basket_item.quantity, class: 'quantity-input', 
+                                  data: { basket_target: "quantityInput", action: "input->basket#validateQuantity" } %>
             <%= form.submit "Update Quantity" %>
           <% end %>
           x £<%= basket_item.item.price %>
         </p>
-        <%= button_to 'Remove all from basket', basket_item_path(basket_item), method: :delete, data: { confirm: 'Are you sure you want to remove this item from your basket?' } %>
-      <% end %>
-    </div>
+        <%= button_to 'Remove all from basket', basket_item_path(basket_item), 
+            method: :delete, data: { confirm: 'Are you sure?' } %>
+      </div>
+    <% end %>
   <% else %>
     <p>Your basket is empty</p>
   <% end %>

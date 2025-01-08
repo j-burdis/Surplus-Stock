@@ -12,7 +12,7 @@ class BasketItemsController < ApplicationController
       # Increment the quantity by the value passed from the form
       basket_item.update(quantity: basket_item.quantity + quantity)
     else
-      new_basket_item = basket.basket_items.create(item: item, quantity: 1)
+      new_basket_item = basket.basket_items.create(item: item, quantity: quantity)
 
       if new_basket_item.save
         Rails.logger.info("Basket item successfully created: #{new_basket_item.inspect}")
