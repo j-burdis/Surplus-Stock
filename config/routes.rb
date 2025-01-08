@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   # root "posts#index"
   root to: "pages#home"
   resources :items, only: [:index, :show]
-  resources :basket_items, only: [:create, :destroy]
+  resources :basket_items, only: [:create, :update, :destroy]
   resources :orders, only: [:create, :index, :show]
   resource :basket, only: [:show]
 

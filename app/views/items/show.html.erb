@@ -8,12 +8,25 @@
         <p class="pb-2"><%= @item.description %></p>
         <p class="pb-2">Dimensions: </p>
         <p class="pb-2">Stock remaining: <%= @item.stock%></p>
-        <div class="pb-2 flex justify-between text-center">
+
+        <div class="pb-2 flex justify-between items-center" data-controller="basket">
           <p>£<%= @item.price.round(0) %></p>
-          <div>
-            <p><%= button_to "Add to basket", basket_items_path(item_id: @item.id), method: :post, class: 'btn-primary' %> - 1 +<p>
+          
+          <div class="flex items-center">
+            <p>Quantity:&nbsp;</p>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" max="<%= @item.stock %>" class="w-16 text-center">
           </div>
+
+          <%= form_with url: basket_items_path(item_id: @item.id), 
+                method: :post, class: 'inline', 
+                data: { controller: "basket", 
+                action: "input->basket#updateHiddenQuantity" } do |form| %>
+            <%= form.hidden_field :quantity, id: 'quantity-input', 
+                data: { target: "basket.hiddenQuantity"} %>
+            <%= form.submit "Add to basket", class: 'btn-primary' %>
+          <% end %>
         </div>
+
       </div>
       <div class="mt-auto">
         <%= link_to "Back to results", items_path, class: 'btn-primary' %>
