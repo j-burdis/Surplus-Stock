@@ -2,18 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
-
-@layer components {
-  .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
+/* @layer base {
+  form.button_to button {
+    all: unset;
+    @apply inline-block bg-transparent;
   }
-}
-
-*/
+} */
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-500 text-white py-2 px-6 rounded-md text-lg font-semibold hover:bg-blue-700 transition-all;
+    @apply bg-blue-500 text-white py-2 px-6 rounded-md text-lg font-semibold hover:bg-blue-700 transition-all inline-flex items-center justify-center;
   }
 }
