@@ -1,31 +1,54 @@
-<div class="p-4">
-  <h1 class="font-bold text-4xl">My basket</h1>
-  <% if @basket_items.any? %>
-    <% @basket_items.each do |basket_item| %>
-      <div data-controller="basket">
-        <p>
-          <%= basket_item.item.name %>: 
-          <%= form_with(model: basket_item, method: :patch) do |form| %>
-            <%= form.number_field :quantity, 
-                min: 1, 
-                max: basket_item.item.stock, 
-                value: basket_item.quantity, 
-                class: 'quantity-input', 
-                data: { 
-                  basket_target: "quantityInput", 
-                  action: "input->basket#validateQuantity" 
-                } %>
-            <%= form.submit "Update Quantity" %>
-          <% end %>
-          x £<%= basket_item.item.price %>
-        </p>
-        <%= button_to 'Remove all from basket',
-            basket_item_path(basket_item),
-            method: :delete,
-            data: { confirm: 'Are you sure?' } %>
-      </div>
+<div class="p-4 flex flex-col lg:flex-row">
+  <div class="w-full lg:w-1/2">
+    <h1 class="font-bold text-3xl p-1">My basket</h1>
+    <% if @basket_items.any? %>
+      <% @basket_items.each do |basket_item| %>
+        <div class="flex items-center bg-slate-50 m-1" data-controller="basket">
+          <img src="<%= basket_item.item.image_url %>" class="w-20 p-1 mr-2">
+          <div class="flex justify-between flex-grow mr-2">
+            <div class="flex flex-col">
+              <p>
+                <%= basket_item.item.name %>
+              </p>
+              <p class="pt-2">
+                £<%= basket_item.item.price.round(0) %> per unit
+              </p>
+            </div>
+            <div class="flex flex-col items-end">
+              <div class="flex">
+                <p>Quantity:&nbsp;</p>
+                <%= form_with(model: basket_item, method: :patch) do |form| %>
+                  <%= form.number_field :quantity, 
+                      min: 1, 
+                      max: basket_item.item.stock, 
+                      value: basket_item.quantity, 
+                      class: 'w-16 bg-slate-50', 
+                      data: { 
+                        basket_target: "quantityInput", 
+                        action: "input->basket#validateQuantity" 
+                      } %>
+                  <%= form.submit "Update" %> <%# , class: 'btn-primary' %>
+                <% end %>
+              </div>
+            
+              <%= button_to 'Remove all',
+                  basket_item_path(basket_item),
+                  method: :delete,
+                  class: 'pt-2',
+                  data: { confirm: 'Are you sure?' } %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p>Your basket is empty</p>
     <% end %>
-  <% else %>
-    <p>Your basket is empty</p>
-  <% end %>
+  </div>
+
+  <div class="w-full lg:w-1/2">
+    <h1 class="font-bold text-3xl p-1">Checkout</h1>
+    <div>
+      
+    </div>
+  </div>
 </div>
