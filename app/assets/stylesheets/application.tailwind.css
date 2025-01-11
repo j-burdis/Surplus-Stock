@@ -6,6 +6,25 @@ html, body {
   @apply overflow-x-hidden;
 }
 
+/* Flash message styling */
+#flash-messages .flash-message {
+  @apply fixed bottom-5 right-5 p-4 rounded-lg text-white z-50 transition-opacity duration-500 ease-out max-w-xs;
+  opacity: 1;
+}
+
+.flash-notice {
+  @apply bg-green-500;
+}
+
+.flash-alert {
+  @apply bg-red-500;
+}
+
+.flash-message.hidden {
+  @apply opacity-0 pointer-events-none;
+}
+
+
 @layer components {
   .btn-primary {
     @apply bg-blue-500 text-white py-2 px-6 rounded-md text-lg font-semibold hover:bg-blue-700 transition-all inline-flex items-center justify-center;
