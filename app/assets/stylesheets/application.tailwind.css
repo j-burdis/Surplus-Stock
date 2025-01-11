@@ -6,10 +6,13 @@ html, body {
   @apply overflow-x-hidden;
 }
 
-/* Flash message styling */
-#flash-messages .flash-message {
-  @apply fixed bottom-5 right-5 p-4 rounded-lg text-white z-50 transition-opacity duration-500 ease-out max-w-xs;
-  opacity: 1;
+/* Flash message container */
+#flash-messages {
+  @apply fixed bottom-5 right-5 z-50;
+}
+
+.flash-message {
+  @apply p-4 rounded-lg text-white transition-all duration-500 ease-out max-w-xs flex items-center justify-between opacity-100;
 }
 
 .flash-notice {
@@ -20,6 +23,12 @@ html, body {
   @apply bg-red-500;
 }
 
+/* Close button styling */
+.flash-close-btn {
+  @apply text-white bg-transparent border-0 cursor-pointer ml-4;
+}
+
+/* Fade out the message and prevent interaction after it's hidden */
 .flash-message.hidden {
   @apply opacity-0 pointer-events-none;
 }
