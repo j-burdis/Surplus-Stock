@@ -2,12 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @layer base {
-  form.button_to button {
-    all: unset;
-    @apply inline-block bg-transparent;
-  }
-} */
+html, body {
+  @apply overflow-x-hidden;
+}
 
 @layer components {
   .btn-primary {
@@ -16,5 +13,24 @@
 
   .input-class {
     @apply px-4 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500;
+  }
+
+  .filter-tile {
+    @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-center font-medium cursor-pointer transition-all flex-shrink-0;
+  }
+  .filter-tile:hover {
+    @apply bg-gray-300;
+  }
+  .filter-tile.active {
+    @apply bg-blue-500 text-white;
+  }
+  .overflow-x-auto {
+    @apply flex-nowrap overflow-x-scroll no-scrollbar;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
   }
 }
