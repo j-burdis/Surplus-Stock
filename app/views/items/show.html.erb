@@ -37,7 +37,12 @@
 
       </div>
       <div class="mt-auto">
-        <%= link_to "Back to all results", items_path %>
+        <%#= link_to "Back to all results", items_path %>
+        <% if params[:query].present? %>
+          <%= link_to "Back to all results", items_path(query: params[:query]), class: "text-blue-500" %>
+        <% else %>
+          <%= link_to "Back to all results", items_path, class: "text-blue-500" %>
+        <% end %>
       </div>
     </div>
   </div>
