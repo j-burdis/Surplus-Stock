@@ -9,4 +9,12 @@ class Item < ApplicationRecord
   validates :name, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :stock, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  include PgSearch::Model
+  pg_search_scope :search_by_name_and_description,
+                  against: %i[name description],
+                  using: {
+                    tsearch: { prefix: true, dictionary: "english" }
+                  }
+  # using: :trigram
 end

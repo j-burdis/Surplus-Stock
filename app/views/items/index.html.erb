@@ -1,23 +1,28 @@
 <div class="p-4">
-  <div class="flex flex-col">
-    <h1 class="font-bold text-3xl">All products</h1>
-    <p class="pb-2">Results</p>
-    <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <% @items.each do |item| %>
-        <%= link_to item_path(item) do %>
-        <div class="flex flex-col max-w-65 bg-slate-50 drop-shadow">
-          <img src="<%= item.image_url %>" class="object-cover mx-2 mt-2"/>
-          <div class="px-2 py-1">
-            <p>
-              <%= item.name %>
-            </p>
-            <p>
-              £<%= item.price.round(0) %>
-            </p>
-          </div>
+  <div class="flex justify-between items-center w-full mb-2">
+    <%# <h1 class="font-bold text-2xl sm:text-lg">All products</h1> %>
+    <p class="mx-2">
+      <%= params[:query].present? ? "Results for '#{params[:query]}'" : "All products" %>
+    </p>
+    <%= form_with url: items_path, method: :get, local: true, class: "w-full sm:w-auto" do %>
+      <div class="flex items-center w-full sm:w-auto">
+        <%= text_field_tag :query, params[:query], placeholder: "Search items", class: "input-class flex-grow sm:flex-grow-0 w-full sm:w-auto" %>
+        <%= submit_tag "Search", class: "btn-primary ml-2 w-full sm:w-auto" %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+    <% @items.each do |item| %>
+      <%= link_to item_path(item) do %>
+      <div class="flex flex-col max-w-65 bg-slate-50 drop-shadow">
+        <img src="<%= item.image_url %>" class="object-cover mx-2 mt-2"/>
+        <div class="px-2 py-1">
+          <p><%= item.name %></p>
+          <p>£<%= item.price.round(0) %></p>
         </div>
-        <% end %>
+      </div>
       <% end %>
-    </div>
+    <% end %>
   </div>
 </div>
