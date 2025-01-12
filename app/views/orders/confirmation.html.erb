@@ -1,0 +1,11 @@
+<div class="p-4 text-center">
+  <h1 class="font-bold text-3xl">Thank you for your order!</h1>
+  <p>Your order has been successfully placed.</p>
+  <p>Order ID: <%= @order.id %></p>
+  <p>Order Total: £<%= @order.order_items.sum { |item| item.quantity * item.price }.round(2) %></p>
+
+  <!-- Optionally show more order details -->
+  <div class="py-4">
+    <%= link_to "Back to Home", root_path, class: "btn-primary" %>
+  </div>
+</div>

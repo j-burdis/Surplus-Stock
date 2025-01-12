@@ -16,7 +16,13 @@ Rails.application.routes.draw do
   root to: "pages#home"
   resources :items, only: [:index, :show]
   resources :basket_items, only: [:create, :update, :destroy]
-  resources :orders, only: [:create, :index, :show]
   resource :basket, only: [:show]
 
+  resources :orders, only: [:new, :create, :index, :show] do
+    member do
+      get :confirmation
+    end
+  end
+  
+  resources :payments, only: [:create]
 end
