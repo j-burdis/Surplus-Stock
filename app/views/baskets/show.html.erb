@@ -70,7 +70,7 @@
           <span>Subtotal:</span>
           <span>£<%= @basket_items.sum { |item| item.item.price * item.quantity }.round(0) %></span>
         </div>
-        <div class="flex justify-between text-sm py-1">
+        <div class="flex justify-between text-lg py-1">
           <span>Delivery fee:</span>
           <span>£<%= @delivery.round(0) %></span>
         </div>

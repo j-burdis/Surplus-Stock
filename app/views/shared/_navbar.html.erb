@@ -24,6 +24,7 @@
           <p class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
             My account
           </p>
+          <%= link_to "Order History", orders_path, class: 'block px-4 py-2 text-gray-800 hover:bg-gray-100' %>
           <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100' %>
         </div>
       </div>

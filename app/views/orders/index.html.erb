@@ -1,4 +1,24 @@
-<div>
-  <h1 class="font-bold text-4xl">Orders#index</h1>
-  <p>Find me in app/views/orders/index.html.erb</p>
+<div class="p-4">
+  <h1 class="text-2xl font-bold mb-4">My Order History</h1>
+
+  <% if @orders.any? %>
+    <% @orders.each do |order| %>
+      <div class="bg-white shadow p-4 mb-4 rounded">
+        <p><strong>Order ID:</strong> <%= order.id %></p>
+        <p><strong>Date:</strong> <%= order.created_at.strftime('%d %B %Y, %I:%M %p') %></p>
+        <p><strong>Status:</strong> <%= order.status.titleize %></p>
+        <p><strong>Total Amount:</strong> £<%= order.total_amount.round(2) %></p>
+
+        <ul class="mt-2">
+          <% order.order_items.each do |item| %>
+            <li>
+              <%= item.quantity %> x <%= item.item.name %> (£<%= item.price.round(2) %> each)
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% else %>
+    <p>You have no past orders.</p>
+  <% end %>
 </div>
