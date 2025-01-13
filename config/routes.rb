@@ -22,7 +22,8 @@ Rails.application.routes.draw do
     member do
       get :confirmation
     end
+    resources :payments, only: [:new, :create] do
+      get :success, on: :collection
+    end
   end
-  
-  resources :payments, only: [:create]
 end

@@ -1,0 +1,77 @@
+<div class="p-4 flex flex-col lg:flex-row">
+  <div class="w-full lg:w-1/2">
+    <h1 class="font-bold text-3xl p-1">Order Summary</h1>
+    <div class="bg-slate-50 p-2 m-2 drop-shadow">
+      <ul class="pb-4">
+        <% @order.order_items.each do |item| %>
+          <li class="flex justify-between border-b py-2">
+            <span><%= item.item.name %> (x<%= item.quantity %>)</span>
+            <span>£<%= (item.price * item.quantity).round(0) %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <div class="flex justify-between text-sm py-1">
+        <span>Delivery fee:</span>
+        <span>£<%= @delivery.round(0) %></span>
+      </div>
+
+      <div class="flex justify-between font-bold text-lg border-t pt-2">
+        <span>Total:</span>
+        <span>£<%= @order.total_amount.round(0) %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-1/2">
+    <h1 class="font-bold text-3xl p-1">Payment Details</h1>
+    <div class="bg-slate-50 p-2 m-2 drop-shadow">
+      <%= form_with(model: [@order, @order.build_payment], local: true) do |form| %>
+        <% if flash[:alert] %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+
+
+          <div class="py-2">
+            <%= form.label :card_number, "Card Number", class: "block mb-1" %>
+            <%= form.text_field :card_number, 
+                pattern: "\\d{4} \\d{4} \\d{4} \\d{4}", 
+                maxlength: 19, 
+                placeholder: "1234 5678 1234 5678", 
+                required: true, 
+                class: "w-full p-2 border rounded",
+                id: "card-number" %>
+          </div>
+
+          <div class="py-2">
+            <%= form.label :expiry_date, "Expiry Date (MM/YY)", class: "block mb-1" %>
+            <%= form.text_field :expiry_date, 
+                pattern: "^(0[1-9]|1[0-2])\\/\\d{2}$", 
+                maxlength: 5, 
+                placeholder: "MM/YY", 
+                required: true, 
+                class: "w-full p-2 border rounded",
+                id: "expiry-date" %>
+          </div>
+
+          <div class="py-2">
+            <%= form.label :cvv, "CVV", class: "block mb-1" %>
+            <%= form.text_field :cvv, 
+                pattern: "^\\d{3,4}$", 
+                maxlength: 4, 
+                placeholder: "123", 
+                required: true, 
+                class: "w-full p-2 border rounded",
+                id: "cvv" %>
+          </div>
+
+          <%= form.hidden_field :amount, value: @order.total_amount %>
+        
+
+        <%= form.submit "Pay Now", class: "btn-primary w-full text-center cursor-pointer mt-4" %>
+      <% end %>
+    </div>
+  </div>
+</div>
