@@ -11,6 +11,10 @@
 require "json"
 require "open-uri"
 
+puts "Clearing existing items..."
+
+Item.destroy_all
+
 puts "Seeding items from API..."
 
 begin
@@ -28,7 +32,7 @@ begin
       image_url: product["image_path"],
       stock: rand(40..50),
       category: product["category"],
-      discount_price: product["discount_price"],
+      discount_price: product["discount_price"]&.round,
       user_id: User.first&.id || 2 # Assign to the first user or a default user ID
     )
   end

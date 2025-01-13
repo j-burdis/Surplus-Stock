@@ -2,7 +2,7 @@
   <h1 class="font-bold text-3xl">Thank you for your order!</h1>
   <p>Your order has been successfully placed.</p>
   <p>Order ID: <%= @order.id %></p>
-  <p>Order Total: £<%= (@order.total_amount).round(0) %></p>
+  <p>Order Total: £<%= (@order.total_amount) %></p>
 
   <!-- Optionally show more order details -->
   <div class="py-4">

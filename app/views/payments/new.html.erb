@@ -6,19 +6,19 @@
         <% @order.order_items.each do |item| %>
           <li class="flex justify-between border-b py-2">
             <span><%= item.item.name %> (x<%= item.quantity %>)</span>
-            <span>£<%= (item.price * item.quantity).round(0) %></span>
+            <span>£<%= (item.price * item.quantity) %></span>
           </li>
         <% end %>
       </ul>
 
       <div class="flex justify-between py-1">
         <span>Delivery fee:</span>
-        <span>£<%= @delivery.round(0) %></span>
+        <span>£<%= @delivery %></span>
       </div>
 
       <div class="flex justify-between font-bold text-lg border-t pt-2">
         <span>Total:</span>
-        <span>£<%= @order.total_amount.round(0) %></span>
+        <span>£<%= @order.total_amount %></span>
       </div>
     </div>
   </div>

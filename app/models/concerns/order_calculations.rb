@@ -1,7 +1,7 @@
 module OrderCalculations
   extend ActiveSupport::Concern
 
-  DELIVERY_FEE = 10.0
+  DELIVERY_FEE = 10
 
   def calculate_totals
     @subtotal = calculate_subtotal

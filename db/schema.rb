@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_12_185303) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_13_173618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -35,7 +35,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_12_185303) do
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.text "description"
-    t.decimal "price"
+    t.integer "price"
     t.string "image_url"
     t.integer "stock"
     t.bigint "user_id", null: false
@@ -50,7 +50,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_12_185303) do
     t.bigint "order_id", null: false
     t.bigint "item_id", null: false
     t.integer "quantity"
-    t.decimal "price"
+    t.integer "price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_order_items_on_item_id"
@@ -69,7 +69,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_12_185303) do
 
   create_table "payments", force: :cascade do |t|
     t.bigint "order_id", null: false
-    t.decimal "amount", null: false
+    t.integer "amount", null: false
     t.string "card_type"
     t.string "card_last4"
     t.string "status", default: "pending"
