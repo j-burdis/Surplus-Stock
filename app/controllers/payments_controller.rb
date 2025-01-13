@@ -79,6 +79,8 @@ class PaymentsController < ApplicationController
   end
 
   def transfer_basket_to_order
+    return if @order.order_items.exists?
+
     basket = current_user.basket
     basket.basket_items.each do |basket_item|
       @order.order_items.create!(
