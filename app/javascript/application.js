@@ -1,7 +1,7 @@
 // Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
 import "@hotwired/turbo-rails"
 import "controllers"
-import "./packs/orders"
+import "./orders"
 
 document.addEventListener("turbo:load", () => {
   const menuButton = document.getElementById("menu-button");
