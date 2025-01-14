@@ -15,24 +15,24 @@ class OrdersController < ApplicationController
   end
 
   def create
-    # Create the order
-    @order = current_user.orders.build(status: "pending")
-
-    if @order.save
-      # Transfer basket items to order items
-      @basket.basket_items.each do |basket_item|
-        @order.order_items.create!(
-          item: basket_item.item,
-          quantity: basket_item.quantity,
-          price: basket_item.item.price
-        )
+    Order.transaction do
+      if @basket_items.empty?
+        flash[:alert] = "Your basket is empty"
+        redirect_to basket_path and return
       end
 
-      redirect_to new_order_payment_path(@order)
-    else
-      flash[:alert] = "Could not create order."
-      # render :new, status: :unprocessable_entity
-      redirect_to basket_path
+      calculate_totals # this sets @total
+      @order = current_user.orders.build(
+        status: "pending",
+        total_amount: @total,
+        delivery_fee: DELIVERY_FEE
+      )
+      if @order.save && transfer_basket_to_order(@order)
+        redirect_to new_order_payment_path(@order)
+      else
+        flash[:alert] = "Could not create order."
+        redirect_to basket_path
+      end
     end
   end
 
@@ -53,9 +53,17 @@ class OrdersController < ApplicationController
     @order = current_user.orders.find(params[:id])
   end
 
-  # def calculate_totals
-  #   @subtotal = @basket_items.sum { |item| item.quantity * item.item.price }
-  #   @delivery = 10 # add £10 delivery fee
-  #   @total = @subtotal + @delivery
-  # end
+  def transfer_basket_to_order(order)
+    # Transfer basket items to order items
+    @basket.basket_items.each do |basket_item|
+      order.order_items.create!(
+        item: basket_item.item,
+        quantity: basket_item.quantity,
+        price: basket_item.item.price
+      )
+    end
+    true
+  rescue ActiveRecord::RecordInvalid
+    false
+  end
 end

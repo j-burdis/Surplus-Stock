@@ -16,18 +16,22 @@
               </p>
 
               <div class="flex pt-2">
-                <p>Quantity:&nbsp;</p>
-                <%= form_with(model: basket_item, method: :patch) do |form| %>
-                  <%= form.number_field :quantity, 
-                      # min: 1, 
-                      max: basket_item.item.stock, 
-                      value: basket_item.quantity, 
-                      class: 'w-16 bg-slate-50', 
-                      data: { 
-                        basket_target: "quantityInput", 
-                        action: "input->basket#validateQuantity" 
-                      } %>
-                  <%= form.submit "Update", class: 'cursor-pointer' %>
+                <% if basket_item.item.stock.zero? %>
+                  <p class="text-red-500">Out of stock</p>
+                  <% else %>
+                  <p>Quantity:&nbsp;</p>
+                  <%= form_with(model: basket_item, method: :patch) do |form| %>
+                    <%= form.number_field :quantity, 
+                        # min: 1, 
+                        max: basket_item.item.stock, 
+                        value: basket_item.quantity, 
+                        class: 'w-16 bg-slate-50', 
+                        data: { 
+                          basket_target: "quantityInput", 
+                          action: "input->basket#validateQuantity" 
+                        } %>
+                    <%= form.submit "Update", class: 'cursor-pointer' %>
+                  <% end %>
                 <% end %>
               </div>
 

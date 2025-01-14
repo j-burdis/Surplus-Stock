@@ -13,12 +13,12 @@
 
       <div class="flex justify-between py-1">
         <span>Delivery fee:</span>
-        <span>£<%= @delivery %></span>
+        <span>£<%= @order.delivery_fee %></span>
       </div>
 
       <div class="flex justify-between font-bold text-lg border-t pt-2">
         <span>Total:</span>
-        <span>£<%= @order.total_amount %></span>
+        <span>£<%= @order.total_amount || 0 %></span>
       </div>
     </div>
   </div>

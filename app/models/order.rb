@@ -1,9 +1,13 @@
 class Order < ApplicationRecord
   belongs_to :user
-
   has_many :order_items, dependent: :destroy
   has_one :payment, dependent: :destroy
   has_many :items, through: :order_items
+
+  validates :total_amount, presence: true, numericality: { greater_than: 0 }
+  validates :delivery_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
+
+  scope :recent, -> { order(created_at: :desc) }
 
   enum status: {
     pending: "pending",
@@ -16,13 +20,5 @@ class Order < ApplicationRecord
 
   def paid?
     status == "paid" && payment&.completed?
-  end
-
-  def total_amount
-    subtotal + OrderCalculations::DELIVERY_FEE
-  end
-
-  def subtotal
-    order_items.sum { |item| item.quantity * item.price }
   end
 end
