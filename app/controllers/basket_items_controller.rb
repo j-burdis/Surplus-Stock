@@ -12,7 +12,7 @@ class BasketItemsController < ApplicationController
     else
       basket.basket_items.create(item: item, quantity: quantity)
     end
-    redirect_to basket_path, notice: "#{item.name} has been added to your basket."
+    redirect_to item_path(item), notice: "#{item.name} has been added to your basket."
   #   ActiveRecord::Base.transaction do
   #     Rails.logger.info "Starting basket item creation..."
   #     item = Item.find(params[:item_id])
