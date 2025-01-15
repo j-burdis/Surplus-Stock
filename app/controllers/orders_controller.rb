@@ -22,6 +22,9 @@ class OrdersController < ApplicationController
       end
 
       calculate_totals # this sets @total
+
+      current_user.orders.pending.destroy_all
+
       @order = current_user.orders.build(
         status: "pending",
         total_amount: @total,
