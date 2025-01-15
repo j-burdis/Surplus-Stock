@@ -1,6 +1,19 @@
 <div class="p-4">
   <h1 class="text-3xl font-bold p-1 mb-4">My Order History</h1>
 
+  <div class="flex justify-start items-center w-full mb-4">
+    <div class="flex overflow-x-auto gap-4 py-2 w-full no-scrollbar">
+      <% statuses = ["All"] + Order.statuses.keys.map(&:titleize) %>
+      <% statuses.each do |status| %>
+        <% status_key = status.downcase == "all" ? nil : status.downcase %>
+        <% is_active = (params[:status] == status_key || (params[:status].nil? && status.downcase == "all")) %>
+        <%= link_to orders_path(status: status_key), class: "filter-tile #{'active' if is_active}" do %>
+          <%= status %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
   <% if @orders.any? %>
     <% @orders.each do |order| %>
       <div class="bg-slate-50 p-2 my-2 drop-shadow flex flex-col md:flex-row w-full lg:w-2/3">

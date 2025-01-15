@@ -4,6 +4,11 @@ class OrdersController < ApplicationController
   before_action :set_order, only: %i[show confirmation]
   def index
     @orders = current_user.orders.includes(:order_items, :payment)
+
+    @orders = @orders.where(status: params[:status]) if params[:status].present? && Order.statuses.key?(params[:status])
+
+    # Ensure sorting is always applied
+    @orders = @orders.order(created_at: :desc)
   end
 
   def show

@@ -10,8 +10,8 @@ class Order < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   enum status: {
-    pending: "pending",
     paid: "paid",
+    pending: "pending",
     processing: "processing",
     shipped: "shipped",
     delivered: "delivered",
