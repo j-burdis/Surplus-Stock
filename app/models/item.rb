@@ -17,4 +17,8 @@ class Item < ApplicationRecord
                     tsearch: { prefix: true, dictionary: "english" }
                   }
   # using: :trigram
+
+  def stock_available?(requested_quantity)
+    stock >= requested_quantity
+  end
 end

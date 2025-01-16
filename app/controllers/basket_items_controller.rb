@@ -6,18 +6,47 @@ class BasketItemsController < ApplicationController
     basket = current_user.basket || Basket.create(user: current_user)
     basket_item = basket.basket_items.find_by(item: item)
 
+    # if basket_item
+    #   # Increment the quantity by the value passed from the form
+    #   basket_item.update(quantity: basket_item.quantity + quantity)
+    # else
+    #   basket.basket_items.create(item: item, quantity: quantity)
+    # end
+    # redirect_to item_path(item), notice: "#{item.name} has been added to your basket."
     if basket_item
-      # Increment the quantity by the value passed from the form
-      basket_item.update(quantity: basket_item.quantity + quantity)
+      # Calculate new quantity
+      new_quantity = basket_item.quantity + quantity
+      stock_adjustment = new_quantity - basket_item.quantity
     else
-      basket.basket_items.create(item: item, quantity: quantity)
+      stock_adjustment = quantity
     end
-    redirect_to item_path(item), notice: "#{item.name} has been added to your basket."
+
+    if item.stock >= stock_adjustment
+      item.decrement!(:stock, stock_adjustment) # Reduce stock
+      basket_item ? basket_item.update(quantity: new_quantity) : basket.basket_items.create(item: item, quantity: quantity)
+      redirect_to item_path(item), notice: "#{item.name} has been added to your basket."
+    else
+      redirect_to item_path(item), alert: "Not enough stock available."
+    end
   end
 
   def update
-    quantity = basket_item_params[:quantity].to_i
-    if @basket_item.update(quantity: quantity)
+    # quantity = basket_item_params[:quantity].to_i
+    # if @basket_item.update(quantity: quantity)
+    #   redirect_to basket_path, notice: "Quantity updated successfully."
+    # else
+    #   redirect_to basket_path, alert: "Unable to update quantity."
+    # end
+    new_quantity = basket_item_params[:quantity].to_i
+    stock_adjustment = new_quantity - @basket_item.quantity
+
+    if stock_adjustment.positive? && @basket_item.item.stock >= stock_adjustment
+      @basket_item.item.decrement!(:stock, stock_adjustment)
+    elsif stock_adjustment.negative?
+      @basket_item.item.increment!(:stock, -stock_adjustment)
+    end
+
+    if @basket_item.update(quantity: new_quantity)
       redirect_to basket_path, notice: "Quantity updated successfully."
     else
       redirect_to basket_path, alert: "Unable to update quantity."
@@ -25,6 +54,9 @@ class BasketItemsController < ApplicationController
   end
 
   def destroy
+    # @basket_item.destroy
+    # redirect_to basket_path, notice: "Item has been removed from your basket."
+    @basket_item.item.increment!(:stock, @basket_item.quantity) # Restore stock
     @basket_item.destroy
     redirect_to basket_path, notice: "Item has been removed from your basket."
   end
