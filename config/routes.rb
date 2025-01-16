@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :orders, only: [:new, :create, :index, :show] do
     member do
       get :confirmation
+      delete :cancel
     end
     resources :payments, only: [:new, :create] do
       get :success, on: :collection

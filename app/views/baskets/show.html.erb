@@ -52,6 +52,7 @@
           </div>
         </div>
       <% end %>
+
     <% else %>
       <p class="text-center mt-4">Your basket is empty</p>
     <% end %>
@@ -59,7 +60,29 @@
 
   <div class="w-full lg:w-1/2">
     <h1 class="font-bold text-3xl p-1">Checkout</h1>
-    <% if @basket_items.any? %>
+
+    <% if @pending_order %>
+      <div class="bg-slate-50 p-2 m-2 drop-shadow">
+        <h2 class="text-xl font-semibold pb-2">Pending Order</h2>
+        <ul class="pb-4">
+          <% @pending_order.order_items.each do |order_item| %>
+            <li class="flex justify-between border-b py-2">
+              <span><%= order_item.item.name %> (x<%= order_item.quantity %>)</span>
+              <span>£<%= (order_item.price * order_item.quantity) %></span>
+            </li>
+          <% end %>
+        </ul>
+        <div class="flex justify-between font-bold text-lg pt-2">
+          <span>Total:</span>
+          <span>£<%= @pending_order.total_amount %></span>
+        </div>
+        <div class="flex justify-between mt-4">
+          <%= link_to 'Resume Payment', new_order_payment_path(@pending_order), class: 'btn-primary' %>
+          <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'btn-danger', data: { confirm: 'Are you sure you want to cancel this order?' } %>
+        </div>
+      </div>
+
+    <% elsif @basket_items.any? %>
       <div class="bg-slate-50 p-2 m-2 drop-shadow">
         <h2 class="text-xl font-semibold pb-2">Order Summary</h2>
         <ul class="pb-4">

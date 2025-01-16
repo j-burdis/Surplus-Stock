@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   include OrderCalculations
   before_action :set_basket, only: %i[new create]
-  before_action :set_order, only: %i[show confirmation]
+  before_action :set_order, only: %i[show confirmation cancel]
   def index
     @orders = current_user.orders.includes(:order_items, :payment)
 
@@ -48,6 +48,12 @@ class OrdersController < ApplicationController
     return if @order.paid?
 
     redirect_to order_path(@order), alert: "Order is not yet paid"
+  end
+
+  def cancel
+    @order.destroy
+    flash[:notice] = "Pending order has been cancelled."
+    redirect_to basket_path
   end
 
   private
