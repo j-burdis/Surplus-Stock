@@ -7,15 +7,15 @@ class WishlistItemsController < ApplicationController
       flash[:notice] = "Item is already in your wishlist."
     else
       @wishlist.wishlist_items.create(item: item)
-      flash[:success] = "#{item.name} has been added to your wishlist."
+      flash[:notice] = "#{item.name} has been added to your wishlist."
     end
-    redirect_to wishlist_path
+    redirect_to item_path(item)
   end
 
   def destroy
     wishlist_item = @wishlist.wishlist_items.find(params[:id])
     wishlist_item.destroy
-    flash[:success] = "Item removed from your wishlist."
+    flash[:notice] = "Item removed from your wishlist."
     redirect_to wishlist_path
   end
 

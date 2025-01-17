@@ -5,6 +5,11 @@
   <div class="flex justify-center items-center space-x-4">
     <% if user_signed_in? %>
       <p>
+        <%= link_to wishlist_path do %>
+          <i class="fa-solid fa-heart fa-lg text-blue-800 hover:text-blue-500"></i>
+        <% end %>
+      </p>
+      <p>
         <%= link_to basket_path do %>
           <i class="fa-solid fa-cart-shopping fa-lg text-blue-800 hover:text-blue-500"></i>
         <% end %>

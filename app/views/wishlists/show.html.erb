@@ -1,0 +1,15 @@
+<div class="p-4">
+  <h1>Your Wishlist</h1>
+
+  <ul>
+    <% @wishlist_items.each do |wishlist_item| %>
+      <li>
+        <%= image_tag wishlist_item.item.image_url %>
+        <%= wishlist_item.item.name %> - £<%= wishlist_item.item.price %>
+        <%= button_to 'Remove', wishlist_item_path(wishlist_item), method: :delete, data: { confirm: 'Are you sure?' } %>
+      </li>
+    <% end %>
+  </ul>
+
+  <%= link_to 'Continue Shopping', items_path %>
+</div>
