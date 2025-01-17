@@ -17,7 +17,7 @@ class BasketItemsController < ApplicationController
     if item.stock >= stock_adjustment
       item.decrement!(:stock, stock_adjustment) # Reduce stock
       basket_item ? basket_item.update(quantity: new_quantity) : basket.basket_items.create(item: item, quantity: quantity)
-      redirect_to item_path(item), notice: "#{item.name} has been added to your basket."
+      redirect_to basket_path, notice: "#{item.name} has been added to your basket."
     else
       redirect_to item_path(item), alert: "Not enough stock available."
     end

@@ -14,17 +14,38 @@
                   <%= wishlist_item.item.name %>
                 <% end %>
               </p>
+              <p class="py-2">
+                £<%= wishlist_item.item.price %> per unit
+              </p>
 
-              <div class="flex justify-between">
-                <p class="py-2">
-                  £<%= wishlist_item.item.price %> per unit
-                </p>
+              <div class="flex justify-between items-center pb-2">
                 <div>
-                <%= button_to 'Remove',
-                    wishlist_item_path(wishlist_item),
-                    method: :delete,
-                    class: 'pt-2',
-                    data: { confirm: 'Are you sure?' } %>
+                  <div class="w-full flex justify-between items-center" data-controller="basket">
+                    <%= form_with url: basket_items_path(item_id: wishlist_item.item.id), 
+                          method: :post, class: 'flex items-center',
+                          data: { action: "submit->basket#submitForm" } do |form| %>
+                      <div class="flex">
+                        <p>Quantity:&nbsp;</p>
+                        <input type="number"
+                              name="quantity"
+                              value="1"
+                              min="1"
+                              max="<%= wishlist_item.item.stock %>"
+                              class="w-16 bg-slate-50"
+                              data-basket-target="quantityInput"
+                              data-action="input->basket#updateHiddenQuantity">
+                      </div>
+                      <%= form.hidden_field :quantity, 
+                          data: { basket_target: "hiddenQuantity" } %>
+                      <%= form.submit "Add to basket", class: 'ml-2 cursor-pointer' %>
+                    <% end %>
+                  </div>
+                </div>
+                <div>
+                  <%= button_to 'Remove',
+                      wishlist_item_path(wishlist_item),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' } %>
                 </div>
               </div>
             </div>

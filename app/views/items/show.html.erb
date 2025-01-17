@@ -16,10 +16,8 @@
           </p>
         </div>
         <p class="pb-2"><%= @item.description %></p>
-        <%# <div class="flex justify-between items-center"> %>
-          <p class="pb-2">Stock remaining: <%= @item.stock%></p>
-          <p class="pb-2">Dimensions: </p>
-        <%# </div> %>
+        <p class="pb-2">Stock remaining: <%= @item.stock%></p>
+        <p class="pb-2">Dimensions: </p>
 
         <div class="w-full pb-2 flex justify-between items-center" data-controller="basket">
           <%= form_with url: basket_items_path(item_id: @item.id), 
