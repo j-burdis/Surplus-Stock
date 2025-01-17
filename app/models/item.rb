@@ -5,6 +5,8 @@ class Item < ApplicationRecord
   has_many :baskets, through: :basket_items
   has_many :order_items, dependent: :destroy
   has_many :orders, through: :order_items
+  has_many :wishlist_items, dependent: :destroy
+  has_many :wishlists, through: :wishlist_items
 
   validates :name, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
