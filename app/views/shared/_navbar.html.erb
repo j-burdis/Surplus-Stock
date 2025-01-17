@@ -26,9 +26,7 @@
         <div 
           id="menu-dropdown" 
           class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-10 hidden">
-          <p class="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-            My account
-          </p>
+          <%= link_to "My account", edit_user_registration_path, class: 'block px-4 py-2 text-gray-800 hover:bg-gray-100' %>
           <%= link_to "Order History", orders_path, class: 'block px-4 py-2 text-gray-800 hover:bg-gray-100' %>
           <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100' %>
         </div>
