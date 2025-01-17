@@ -1,15 +1,45 @@
-<div class="p-4">
-  <h1>Your Wishlist</h1>
+<div class="p-4 flex flex-col lg:flex-row">
+  <div class="w-full lg:w-1/2">
+    <h1 class="font-bold text-3xl p-1">My Wishlist</h1>
+    <% if @wishlist_items.any? %>
+      <% @wishlist_items.each do |wishlist_item| %>
+        <div class="flex items-center bg-slate-50 drop-shadow m-2">
+          <%= link_to item_path(wishlist_item.item) do %>
+            <img src="<%= wishlist_item.item.image_url %>" class="w-28 p-1 mr-2">
+          <% end %>
+          <div class="flex justify-between flex-grow mr-2">
+            <div class="flex flex-col grow">
+              <p class="pt-2">
+                <%= link_to item_path(wishlist_item.item) do %>
+                  <%= wishlist_item.item.name %>
+                <% end %>
+              </p>
 
-  <ul>
-    <% @wishlist_items.each do |wishlist_item| %>
-      <li>
-        <%= image_tag wishlist_item.item.image_url %>
-        <%= wishlist_item.item.name %> - £<%= wishlist_item.item.price %>
-        <%= button_to 'Remove', wishlist_item_path(wishlist_item), method: :delete, data: { confirm: 'Are you sure?' } %>
-      </li>
+              <div class="flex justify-between">
+                <p class="py-2">
+                  £<%= wishlist_item.item.price %> per unit
+                </p>
+                <div>
+                <%= button_to 'Remove',
+                    wishlist_item_path(wishlist_item),
+                    method: :delete,
+                    class: 'pt-2',
+                    data: { confirm: 'Are you sure?' } %>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      <% end %>
+
+    <% else %>
+      <p class="text-center mt-4">Your Wishlist is empty</p>
     <% end %>
-  </ul>
+    <%= link_to 'Continue Shopping', items_path %>
+  </div>
 
-  <%= link_to 'Continue Shopping', items_path %>
+  <div class="w-full lg:w-1/2">
+    <h1 class="font-bold text-3xl p-1">Another section</h1>
+  </div>
 </div>
