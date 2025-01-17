@@ -12,4 +12,8 @@ class User < ApplicationRecord
   def basket
     super || create_basket
   end
+
+  def wishlist
+    super || create_wishlist
+  end
 end
