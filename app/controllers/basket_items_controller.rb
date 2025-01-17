@@ -6,13 +6,6 @@ class BasketItemsController < ApplicationController
     basket = current_user.basket || Basket.create(user: current_user)
     basket_item = basket.basket_items.find_by(item: item)
 
-    # if basket_item
-    #   # Increment the quantity by the value passed from the form
-    #   basket_item.update(quantity: basket_item.quantity + quantity)
-    # else
-    #   basket.basket_items.create(item: item, quantity: quantity)
-    # end
-    # redirect_to item_path(item), notice: "#{item.name} has been added to your basket."
     if basket_item
       # Calculate new quantity
       new_quantity = basket_item.quantity + quantity
@@ -31,12 +24,6 @@ class BasketItemsController < ApplicationController
   end
 
   def update
-    # quantity = basket_item_params[:quantity].to_i
-    # if @basket_item.update(quantity: quantity)
-    #   redirect_to basket_path, notice: "Quantity updated successfully."
-    # else
-    #   redirect_to basket_path, alert: "Unable to update quantity."
-    # end
     new_quantity = basket_item_params[:quantity].to_i
     stock_adjustment = new_quantity - @basket_item.quantity
 

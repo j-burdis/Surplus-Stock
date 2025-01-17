@@ -15,9 +15,13 @@ Rails.application.routes.draw do
   # root "posts#index"
   root to: "pages#home"
   resources :items, only: [:index, :show]
+  
   resources :basket_items, only: [:create, :update, :destroy]
   resource :basket, only: [:show]
-
+  
+  resources :wishlist_items, only: [:create, :destroy]
+  resource :wishlist, only: [:show]
+  
   resources :orders, only: [:new, :create, :index, :show] do
     member do
       get :confirmation
