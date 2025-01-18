@@ -15,6 +15,11 @@ class BasketsController < ApplicationController
       end
     end
 
+    # Remove expired orders if any
+    current_user.orders.each do |order|
+      order.destroy if order.expired?
+    end
+
     # Reload basket items after cleanup
     @basket_items = @basket.basket_items.includes(:item).order(:created_at)
     @pending_order = current_user.orders.pending.first

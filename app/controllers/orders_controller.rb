@@ -5,6 +5,11 @@ class OrdersController < ApplicationController
   def index
     @orders = current_user.orders.includes(:order_items, :payment)
 
+    # Remove expired orders
+    @orders.each do |order|
+      order.destroy if order.expired?
+    end
+
     @orders = @orders.where(status: params[:status]) if params[:status].present? && Order.statuses.key?(params[:status])
 
     # Ensure sorting is always applied
@@ -12,6 +17,12 @@ class OrdersController < ApplicationController
   end
 
   def show
+    # Remove expired orders when viewing the order
+    return unless @order.expired?
+
+    @order.destroy
+    flash[:notice] = "Your order has expired and has been removed."
+    redirect_to basket_path
   end
 
   def new

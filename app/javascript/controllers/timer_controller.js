@@ -31,4 +31,13 @@ export default class extends Controller {
 
     setTimeout(() => this.updateTimer(timer, timeLeft - 1), 1000);
   }
+
+  // Disable the 'Resume Payment' button when time expires
+  disableResumePaymentButton(timer) {
+    const disableButton = document.querySelector('[data-disable="true"]');
+    if (disableButton) {
+      disableButton.classList.add("disabled");
+      disableButton.setAttribute("disabled", "true");
+    }
+  }
 }

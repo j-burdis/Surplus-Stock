@@ -20,6 +20,6 @@ class BasketItem < ApplicationRecord
   private
 
   def expiration_time
-    created_at + 1.minutes # Adjust expiration logic as needed
+    created_at + 20.minutes # Adjust expiration logic as needed
   end
 end
