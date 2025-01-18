@@ -120,7 +120,7 @@
         <div class="pt-4">
           <%#= link_to 'Proceed to Payment', new_order_path, class: 'btn-primary w-full text-center' %>
           <%= form_with(url: orders_path, local: true) do |form| %>
-            <%= form.submit 'Proceed to Payment', class: 'btn-primary w-full text-center cursor-pointer' %>
+            <%= form.submit 'Proceed to Payment', class: 'btn-primary w-full text-center' %>
           <% end %>
         </div>
       </div>
