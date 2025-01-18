@@ -2,6 +2,7 @@ class BasketsController < ApplicationController
   include OrderCalculations
   def show
     @basket = current_user.basket
+    @basket.clean_up_expired_items
     @basket_items = @basket.basket_items.includes(:item).order(:created_at)
 
     # Remove expired items and calculate remaining time

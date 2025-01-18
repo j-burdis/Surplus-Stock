@@ -7,13 +7,19 @@ class BasketItem < ApplicationRecord
   # Virtual attribute for remaining time
   # attr_accessor :remaining_time
 
-  # Virtual attribute for remaining time
-  def remaining_time
-    [3.minutes - (Time.current - created_at), 0].max
-  end
-
   # Check if the basket item has expired
   def expired?
-    Time.current > created_at + 30.minutes
+    expiration_time <= Time.current
+  end
+
+  # Virtual attribute for remaining time
+  def remaining_time
+    [expiration_time - Time.current, 0].max
+  end
+
+  private
+
+  def expiration_time
+    created_at + 1.minutes # Adjust expiration logic as needed
   end
 end

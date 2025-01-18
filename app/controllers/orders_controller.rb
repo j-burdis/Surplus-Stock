@@ -21,6 +21,9 @@ class OrdersController < ApplicationController
 
   def create
     Order.transaction do
+      @basket.clean_up_expired_items
+      @basket_items = @basket.basket_items.includes(:item).reject(&:expired?)
+
       if @basket_items.empty?
         flash[:alert] = "Your basket is empty"
         redirect_to basket_path and return

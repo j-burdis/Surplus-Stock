@@ -21,4 +21,14 @@ class Order < ApplicationRecord
   def paid?
     status == "paid" && payment&.completed?
   end
+
+  EXPIRATION_PERIOD = 15.minutes
+
+  def expired?
+    Time.current > created_at + EXPIRATION_PERIOD
+  end
+
+  def time_left
+    [created_at + EXPIRATION_PERIOD - Time.current, 0].max
+  end
 end
