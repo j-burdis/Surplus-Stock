@@ -19,11 +19,11 @@
         <p class="pb-2">Stock remaining: <%= @item.stock%></p>
         <p class="pb-2">Dimensions: </p>
 
-        <div class="w-full pb-2 flex justify-between items-center" data-controller="basket">
+        <div class="w-full pb-2 flex justify-between" data-controller="basket">
           <%= form_with url: basket_items_path(item_id: @item.id), 
-                method: :post, class: 'flex items-center',
+                method: :post, class: 'flex items-start',
                 data: { action: "submit->basket#submitForm" } do |form| %>
-            <div class="flex">
+            <div class="flex py-2">
               <p>Quantity:&nbsp;</p>
               <input type="number"
                      name="quantity"
@@ -36,7 +36,10 @@
             </div>
             <%= form.hidden_field :quantity, 
                 data: { basket_target: "hiddenQuantity" } %>
-            <%= form.submit "Add to basket", class: 'btn-primary ml-2' %>
+            <div class="flex flex-col items-center">
+              <%= form.submit "Add to basket", class: 'btn-primary ml-2' %>
+              <p class="text-center text-gray-500 text-xs">Reserves item for <br> 30 minutes</p>
+            </div>
           <% end %>
         </div>
 
