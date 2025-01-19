@@ -1,6 +1,20 @@
 <div class="p-4 flex flex-col lg:flex-row">
   <div class="w-full lg:w-1/2">
-    <h1 class="font-bold text-3xl p-1">Order Summary</h1>
+    <div class="flex items-end" data-controller="timer">
+      <h1 class="font-bold text-3xl p-1">Order Summary</h1>
+
+      <%# Timer Section for Pending Order %>
+      <% if @pending_order.time_left > 0 %>
+        <div class="text-sm text-gray-500 pb-1 pl-4">
+          Time left: 
+          <span id="order-timer-<%= @pending_order.id %>"
+                data-timer-target="timer" 
+                data-expiration-time="<%= @pending_order.time_left.to_i %>">
+            Loading...
+          </span>
+        </div>
+      <% end %>
+    </div>
     <div class="bg-slate-50 p-2 m-2 drop-shadow">
       <ul class="pb-4">
         <% @order.order_items.each do |item| %>

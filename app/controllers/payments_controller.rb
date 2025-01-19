@@ -4,6 +4,7 @@ class PaymentsController < ApplicationController
   before_action :check_pending_order, only: [:new, :create]
 
   def new
+    @pending_order = current_user.orders.pending.first
   end
 
   def create
