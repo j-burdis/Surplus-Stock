@@ -5,35 +5,72 @@ export default class extends Controller {
   static targets = ["timer"];
 
   connect() {
+    // Clear any existing intervals when connecting
     this.startCountdown();
     console.log("timer connected")
   }
 
-  startCountdown() {
-    this.timerTargets.forEach((timer) => {
-      const expirationTime = parseInt(timer.dataset.expirationTime, 10); // Time in seconds
-      console.log("Expiration Time: ", expirationTime); 
-      if (!isNaN(expirationTime)) {
-        this.updateTimer(timer, expirationTime);
-      }
-    });
+  disconnect() {
+    this.stopAllTimers()
   }
 
-  updateTimer(timer, timeLeft) {
-    if (timeLeft <= 0) {
-      timer.textContent = "Expired";
-      return;
-    }
+  stopAllTimers() {
+    this.timerTargets.forEach(timer => {
+      if (timer.interval) {
+        clearInterval(timer.interval)
+        timer.interval = null
+      }
+    })
+  }
+
+  startCountdown() {
+    this.stopAllTimers()
+    
+    this.timerTargets.forEach(timer => {
+      const expirationTime = parseInt(timer.dataset.expirationTime, 10)
+      if (!isNaN(expirationTime)) {
+        this.startTimerCountdown(timer, expirationTime)
+      }
+    })
+  }
+
+  startTimerCountdown(timer, remainingSeconds) {
+    // Initial display
+    this.updateTimerDisplay(timer, remainingSeconds)
+
+    // Set up the interval
+    timer.interval = setInterval(() => {
+      remainingSeconds -= 1
+      
+      if (remainingSeconds <= 0) {
+        clearInterval(timer.interval)
+        this.handleExpiration(timer)
+      } else {
+        this.updateTimerDisplay(timer, remainingSeconds)
+      }
+    }, 1000)
+  }
+
+  updateTimerDisplay(timer, timeLeft) {
+    // if (timeLeft <= 0) {
+    //   timer.textContent = "Expired";
+    //   return;
+    // }
 
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     timer.textContent = `${minutes}:${seconds.toString().padStart(2, "0")}`;
 
-    setTimeout(() => this.updateTimer(timer, timeLeft - 1), 1000);
+    // setTimeout(() => this.updateTimer(timer, timeLeft - 1), 1000);
+  }
+
+  handleExpiration(timer) {
+    timer.textContent = "Expired";
+    this.disableResumePaymentButton();
   }
 
   // Disable the 'Resume Payment' button when time expires
-  disableResumePaymentButton(timer) {
+  disableResumePaymentButton() {
     const disableButton = document.querySelector('[data-disable="true"]');
     if (disableButton) {
       disableButton.classList.add("disabled");

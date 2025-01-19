@@ -1,9 +1,9 @@
-<div class="p-4 flex flex-col lg:flex-row">
+<div class="p-4 flex flex-col lg:flex-row" data-controller="timer page-refresh">
   <div class="w-full lg:w-1/2">
     <h1 class="font-bold text-3xl p-1">My basket</h1>
     <% if @basket_items.any? %>
       <% @basket_items.each do |basket_item| %>
-        <div class="flex items-center bg-slate-50 drop-shadow m-2" data-controller="timer basket">
+        <div class="flex items-center bg-slate-50 drop-shadow m-2" data-controller="basket">
           <%= link_to item_path(basket_item.item) do %>
             <img src="<%= basket_item.item.image_url %>" class="w-28 p-1 mr-2">
           <% end %>
@@ -75,7 +75,7 @@
 
     <% if @pending_order %>
       <div class="bg-slate-50 p-2 m-2 drop-shadow">
-        <div class="flex items-center" data-controller="timer">
+        <div class="flex items-center" data-controller="">
           <h2 class="text-xl font-semibold pb-2">Pending Order</h2>
 
           <%# Timer Section for Pending Order %>
