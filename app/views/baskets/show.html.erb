@@ -102,11 +102,13 @@
           <span>Total:</span>
           <span>£<%= @pending_order.total_amount %></span>
         </div>
-        <div class="flex justify-between mt-4">
+        <div class="flex justify-between mt-4" id="payment-actions">
           <%= link_to 'Resume Payment',
                       new_order_payment_path(@pending_order),
                       class: 'btn-primary',
-                      data: { disable: @pending_order.time_left <= 0 ? true : false } %>
+                      data: { 
+                        disable: @pending_order.time_left <= 0 ? true : false 
+                      } %>
           <div class="flex flex-col">
             <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'pt-2', data: { confirm: 'Are you sure you want to cancel this order?' } %>
             <p class="text-center text-gray-500 text-xs">Items are still saved to your basket</p>

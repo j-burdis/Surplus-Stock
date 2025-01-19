@@ -66,15 +66,28 @@ export default class extends Controller {
 
   handleExpiration(timer) {
     timer.textContent = "Expired";
-    this.disableResumePaymentButton();
+    // this.disableResumePaymentButton();
+    // Find the closest parent element that might contain the Resume Payment button
+    const container = timer.closest('.bg-slate-50')
+    if (container) {
+      const resumeButton = container.querySelector('.btn-primary')
+      if (resumeButton) {
+        resumeButton.classList.add('opacity-50', 'cursor-not-allowed')
+        resumeButton.setAttribute('disabled', 'disabled')
+        // If it's a link, prevent default behavior
+        resumeButton.addEventListener('click', (e) => {
+          e.preventDefault()
+        })
+      }
+    }
   }
 
   // Disable the 'Resume Payment' button when time expires
-  disableResumePaymentButton() {
-    const disableButton = document.querySelector('[data-disable="true"]');
-    if (disableButton) {
-      disableButton.classList.add("disabled");
-      disableButton.setAttribute("disabled", "true");
-    }
-  }
+  // disableResumePaymentButton() {
+  //   const disableButton = document.querySelector('[data-disable="true"]');
+  //   if (disableButton) {
+  //     disableButton.classList.add("disabled");
+  //     disableButton.setAttribute("disabled", "true");
+  //   }
+  // }
 }

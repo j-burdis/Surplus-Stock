@@ -22,7 +22,7 @@ class Order < ApplicationRecord
     status == "paid" && payment&.completed?
   end
 
-  EXPIRATION_PERIOD = 10.minutes
+  EXPIRATION_PERIOD = 1.minutes
 
   def expired?
     created_at < Time.current - EXPIRATION_PERIOD && status == "pending"

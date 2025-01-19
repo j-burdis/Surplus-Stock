@@ -11,6 +11,10 @@ html, body {
   pointer-events: none;
 }
 
+.btn-primary.opacity-50 {
+  pointer-events: none;
+}
+
 /* Flash message container */
 #flash-messages {
   @apply fixed bottom-5 right-5 z-50;
