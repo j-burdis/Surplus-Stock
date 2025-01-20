@@ -24,5 +24,25 @@ class BasketsController < ApplicationController
     @basket_items = @basket.basket_items.includes(:item).order(:created_at)
     @pending_order = current_user.orders.pending.first
     calculate_totals
+
+    respond_to do |format|
+      format.html
+      format.json do
+        html = render_to_string(
+          partial: 'order_summary',
+          formats: [:html],
+          layout: false
+        )
+        render json: {
+          success: true,
+          html: html
+        }
+      rescue StandardError => e
+        render json: {
+          success: false,
+          error: e.message
+        }, status: :internal_server_error
+      end
+    end
   end
 end
