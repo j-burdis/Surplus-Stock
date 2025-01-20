@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import { visit } from "@hotwired/turbo"
 
 export default class extends Controller {
   connect() {
@@ -13,7 +12,7 @@ export default class extends Controller {
 
   handleVisit(event) {
     const currentPath = window.location.pathname
-    if (currentPath === '/basket') {
+    if (currentPath === '/basket' && event.detail?.visit) {
       event.detail.visit.action = "replace"
     }
   }
@@ -21,7 +20,7 @@ export default class extends Controller {
   // Call this method when navigating back to basket
   refreshPage() {
     if (window.location.pathname === '/basket') {
-      visit(window.location.href, { action: "replace" })
+      Turbo.visit(window.location.href, { action: "replace" })
     }
   }
 }

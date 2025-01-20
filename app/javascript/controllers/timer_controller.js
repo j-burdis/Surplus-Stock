@@ -7,7 +7,6 @@ export default class extends Controller {
   connect() {
     // Clear any existing intervals when connecting
     this.startCountdown();
-    console.log("timer connected")
   }
 
   disconnect() {
