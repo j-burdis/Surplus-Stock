@@ -14,12 +14,22 @@ class BasketItemsController < ApplicationController
       stock_adjustment = quantity
     end
 
-    if item.stock >= stock_adjustment
-      item.decrement!(:stock, stock_adjustment) # Reduce stock
-      basket_item ? basket_item.update(quantity: new_quantity) : basket.basket_items.create(item: item, quantity: quantity)
-      redirect_to basket_path, notice: "#{item.name} has been added to your basket."
-    else
-      redirect_to item_path(item), alert: "Not enough stock available."
+    respond_to do |format|
+      if item.stock >= stock_adjustment
+        item.decrement!(:stock, stock_adjustment) # Reduce stock
+
+        if basket_item
+          basket_item.update(quantity: new_quantity)
+        else
+          basket.basket_items.create(item: item, quantity: quantity)
+        end
+
+        format.html { redirect_to basket_path, notice: "#{item.name} has been added to your basket." }
+        format.json { render json: { success: true, message: "#{item.name} has been added to your basket." } }
+      else
+        format.html { redirect_to item_path(item), alert: "Not enough stock available." }
+        format.json { render json: { success: false, message: "Not enough stock available." } }
+      end
     end
   end
 
@@ -27,16 +37,21 @@ class BasketItemsController < ApplicationController
     new_quantity = basket_item_params[:quantity].to_i
     stock_adjustment = new_quantity - @basket_item.quantity
 
-    if stock_adjustment.positive? && @basket_item.item.stock >= stock_adjustment
-      @basket_item.item.decrement!(:stock, stock_adjustment)
-    elsif stock_adjustment.negative?
-      @basket_item.item.increment!(:stock, -stock_adjustment)
-    end
-
-    if @basket_item.update(quantity: new_quantity)
-      redirect_to basket_path, notice: "Quantity updated successfully."
-    else
-      redirect_to basket_path, alert: "Unable to update quantity."
+    respond_to do |format|
+      if stock_adjustment.positive? && @basket_item.item.stock >= stock_adjustment
+        @basket_item.item.decrement!(:stock, stock_adjustment)
+        @basket_item.update(quantity: new_quantity)
+        format.html { redirect_to basket_path, notice: "Quantity updated successfully." }
+        format.json { render json: { success: true, message: "Quantity updated successfully." } }
+      elsif stock_adjustment.negative?
+        @basket_item.item.increment!(:stock, -stock_adjustment)
+        @basket_item.update(quantity: new_quantity)
+        format.html { redirect_to basket_path, notice: "Quantity updated successfully." }
+        format.json { render json: { success: true, message: "Quantity updated successfully." } }
+      else
+        format.html { redirect_to basket_path, alert: "Unable to update quantity." }
+        format.json { render json: { success: false, message: "Unable to update quantity." } }
+      end
     end
   end
 

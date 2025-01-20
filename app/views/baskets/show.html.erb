@@ -33,7 +33,8 @@
                   <p class="text-red-500">Out of stock</p>
                   <% else %>
                   <p>Quantity:&nbsp;</p>
-                  <%= form_with(model: basket_item, method: :patch) do |form| %>
+                  <%= form_with(model: basket_item, method: :patch,
+                      data: { action: "submit->basket#submitForm" }) do |form| %>
                     <%= form.number_field :quantity, 
                         # min: 1, 
                         max: basket_item.item.stock, 
