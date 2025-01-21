@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html, body {
-  @apply overflow-x-hidden;
+  @apply bg-background text-primaryText overflow-x-hidden;
 }
 
 .disabled {
@@ -45,21 +45,21 @@ html, body {
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-500 text-white py-2 px-6 rounded-md text-lg font-semibold hover:bg-blue-700 transition-all inline-flex items-center justify-center cursor-pointer;
+    @apply bg-lighterBlue text-background py-2 px-6 rounded-sm text-lg font-semibold hover:bg-darkBlue transition-all inline-flex items-center justify-center cursor-pointer;
   }
 
   .input-class {
-    @apply px-4 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500;
+    @apply px-4 py-2 border rounded-sm text-secondaryText focus:outline-none focus:ring-2 focus:ring-lighterBlue;
   }
 
   .filter-tile {
-    @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-md text-center font-medium cursor-pointer transition-all flex-shrink-0;
+    @apply bg-gray-200 text-primaryText px-4 py-2 rounded-sm text-center font-medium cursor-pointer transition-all flex-shrink-0;
   }
   .filter-tile:hover {
     @apply bg-gray-300;
   }
   .filter-tile.active {
-    @apply bg-blue-500 text-white;
+    @apply bg-lighterBlue text-background;
   }
   .overflow-x-auto {
     @apply flex-nowrap overflow-x-scroll no-scrollbar;
