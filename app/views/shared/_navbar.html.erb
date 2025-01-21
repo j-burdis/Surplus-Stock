@@ -1,34 +1,34 @@
-<div class="flex justify-between items-center sticky top-0 z-50 w-full bg-white shadow-sm p-4">
-  <h1 class="text-2xl font-bold text-blue-800 hover:text-blue-500">
+<div class="flex justify-between items-center sticky top-0 z-50 w-full bg-background shadow-sm p-4">
+  <h1 class="text-2xl font-bold text-darkBlue hover:text-lighterBlue">
     <%= link_to 'Surplus Stock', root_path %>
   </h1>
   <div class="flex justify-center items-center space-x-4">
     <% if user_signed_in? %>
       <p>
         <%= link_to wishlist_path do %>
-          <i class="fa-solid fa-heart fa-lg px-2 py-2 text-blue-800 hover:text-blue-500"></i>
+          <i class="fa-solid fa-heart fa-lg p-2 text-darkBlue hover:text-lighterBlue"></i>
         <% end %>
       </p>
       <p>
         <%= link_to basket_path do %>
-          <i class="fa-solid fa-cart-shopping fa-lg px-2 py-2 text-blue-800 hover:text-blue-500"></i>
+          <i class="fa-solid fa-cart-shopping fa-lg p-2 text-darkBlue hover:text-lighterBlue"></i>
         <% end %>
       </p>
       <div class="relative">
         <!-- Dropdown Button -->
         <button 
           id="menu-button" 
-          class="flex items-center px-2 py-2 rounded focus:outline-none text-blue-800">
-          <i class="fa-solid fa-bars fa-lg hover:text-blue-500"></i>
+          class="flex items-center p-2 rounded focus:outline-none text-darkBlue">
+          <i class="fa-solid fa-bars fa-lg hover:text-lighterBlue"></i>
         </button>
 
         <!-- Dropdown Menu -->
         <div 
           id="menu-dropdown" 
-          class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg z-10 hidden">
-          <%= link_to "My account", edit_user_registration_path, class: 'block px-4 py-2 text-gray-800 hover:bg-gray-100' %>
-          <%= link_to "Order History", orders_path, class: 'block px-4 py-2 text-gray-800 hover:bg-gray-100' %>
-          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100' %>
+          class="absolute right-0 mt-2 w-48 bg-background rounded shadow-lg z-10 hidden">
+          <%= link_to "My account", edit_user_registration_path, class: 'block px-4 py-2 text-primaryText hover:bg-gray-200' %>
+          <%= link_to "Order History", orders_path, class: 'block px-4 py-2 text-primaryText hover:bg-gray-200' %>
+          <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: 'block w-full text-left px-4 py-2 text-primaryText hover:bg-gray-200' %>
         </div>
       </div>
     <% else %>

@@ -17,7 +17,7 @@
                 </p>
                 <%# Timer Section %>
                 <% if basket_item.remaining_time > 0 %>
-                  <div class="text-sm text-gray-500 pt-2 pl-4">
+                  <div class="text-sm text-secondaryText pt-2 pl-4">
                     Time left: 
                     <span id="timer-<%= basket_item.id %>"
                           data-timer-target="timer" 
@@ -82,7 +82,7 @@
 
           <%# Timer Section for Pending Order %>
           <% if @pending_order.time_left > 0 %>
-            <div class="text-sm text-gray-500 pb-1 pl-4">
+            <div class="text-sm text-secondaryText pb-1 pl-4">
               Time left: 
               <span id="order-timer-<%= @pending_order.id %>"
                     data-timer-target="timer" 
@@ -113,7 +113,7 @@
                       } %>
           <div class="flex flex-col">
             <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'pt-2', data: { confirm: 'Are you sure you want to cancel this order?' } %>
-            <p class="text-center text-gray-500 text-xs">Items are still saved to your basket</p>
+            <p class="text-center text-secondaryText text-xs">Items are still saved to your basket</p>
           </div>
         </div>
       </div>

@@ -45,11 +45,11 @@ html, body {
 
 @layer components {
   .btn-primary {
-    @apply bg-lighterBlue text-background py-2 px-6 rounded-sm text-lg font-semibold hover:bg-darkBlue transition-all inline-flex items-center justify-center cursor-pointer;
+    @apply bg-darkBlue text-background py-2 px-6 rounded-sm text-lg font-semibold hover:bg-lighterBlue transition-all inline-flex items-center justify-center cursor-pointer;
   }
 
   .input-class {
-    @apply px-4 py-2 border rounded-sm text-secondaryText focus:outline-none focus:ring-2 focus:ring-lighterBlue;
+    @apply px-4 py-2 border rounded-sm text-secondaryText focus:outline-none focus:ring-2 focus:ring-darkBlue;
   }
 
   .filter-tile {
@@ -59,7 +59,7 @@ html, body {
     @apply bg-gray-300;
   }
   .filter-tile.active {
-    @apply bg-lighterBlue text-background;
+    @apply bg-darkBlue text-background;
   }
   .overflow-x-auto {
     @apply flex-nowrap overflow-x-scroll no-scrollbar;

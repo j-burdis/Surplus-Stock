@@ -13,8 +13,8 @@ module.exports = {
         primaryText: '#333333', // Charcoal gray
         secondaryText: '#666666', // Cool gray
         background: '#F8F9FA', // Ivory White
-        darkBlue: '#021526', // Dark blue
-        lighterBlue: '#03346E', // Lighter blue
+        darkBlue: '#03346E', // Dark blue
+        lighterBlue: '#7AB2D3', // Lighter blue
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],

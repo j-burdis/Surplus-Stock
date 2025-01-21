@@ -38,7 +38,7 @@
                 data: { basket_target: "hiddenQuantity" } %>
             <div class="flex flex-col items-center">
               <%= form.submit "Add to basket", class: 'btn-primary ml-2' %>
-              <p class="text-center text-gray-500 text-xs">Reserves item for <br> 30 minutes</p>
+              <p class="text-center text-secondaryText text-xs">Reserves item for <br> 30 minutes</p>
             </div>
           <% end %>
         </div>
@@ -47,9 +47,9 @@
       <div class="mt-auto">
         <%#= link_to "Back to all results", items_path %>
         <% if params[:query].present? %>
-          <%= link_to "Back to all results", items_path(query: params[:query]), class: "text-blue-500" %>
+          <%= link_to "Back to all results", items_path(query: params[:query]), class: "text-lighterBlue" %>
         <% else %>
-          <%= link_to "Back to all results", items_path, class: "text-blue-500" %>
+          <%= link_to "Back to all results", items_path, class: "text-lighterBlue" %>
         <% end %>
       </div>
     </div>
