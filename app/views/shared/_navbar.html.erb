@@ -6,12 +6,12 @@
     <% if user_signed_in? %>
       <p>
         <%= link_to wishlist_path do %>
-          <i class="fa-solid fa-heart fa-lg p-2 text-darkBlue hover:text-lighterBlue"></i>
+          <i class="fa-solid fa-heart fa-lg p-2 text-darkBlue <%= 'text-lighterBlue' if current_page?(wishlist_path) %> hover:text-lighterBlue"></i>
         <% end %>
       </p>
       <p>
         <%= link_to basket_path do %>
-          <i class="fa-solid fa-cart-shopping fa-lg p-2 text-darkBlue hover:text-lighterBlue"></i>
+          <i class="fa-solid fa-cart-shopping fa-lg p-2 text-darkBlue <%= 'text-lighterBlue' if current_page?(basket_path) %> hover:text-lighterBlue"></i>
         <% end %>
       </p>
       <div class="relative">
