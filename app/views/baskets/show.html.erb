@@ -107,13 +107,13 @@
         <div class="flex justify-between mt-4" id="payment-actions">
           <%= link_to 'Resume Payment',
                       new_order_payment_path(@pending_order),
-                      class: 'btn-primary',
+                      class: 'btn-primary text-center',
                       data: { 
                         disable: @pending_order.time_left <= 0 ? true : false 
                       } %>
-          <div class="flex flex-col">
-            <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'pt-2', data: { confirm: 'Are you sure you want to cancel this order?' } %>
-            <p class="text-center text-secondaryText text-xs">Items are still saved to your basket</p>
+          <div class="flex flex-col items-start">
+            <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'btn-tertiary mt-2', data: { confirm: 'Are you sure you want to cancel this order?' } %>
+            <p class="text-center text-secondaryText text-xs">Items are still saved <br> to your basket</p>
           </div>
         </div>
       </div>
