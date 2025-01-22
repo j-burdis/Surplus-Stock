@@ -12,7 +12,7 @@
             £<%= @item.price %> -&nbsp;
           </p>
           <p>
-            <%= button_to "Add to Wishlist", wishlist_items_path(item_id: @item.id), method: :post %>
+            <%= button_to "Add to Wishlist", wishlist_items_path(item_id: @item.id), method: :post, class: 'btn-secondary' %>
           </p>
         </div>
         <p class="pb-2"><%= @item.description %></p>

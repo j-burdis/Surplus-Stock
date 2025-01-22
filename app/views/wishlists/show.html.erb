@@ -1,11 +1,11 @@
 <div class="p-4 flex flex-col lg:flex-row">
   <div class="w-full lg:w-1/2">
-    <h1 class="font-bold text-3xl p-1">My Wishlist</h1>
+    <h1 class="font-bold text-3xl p-1 text-darkBlue">My Wishlist</h1>
     <% if @wishlist_items.any? %>
       <% @wishlist_items.each do |wishlist_item| %>
         <div class="flex items-center bg-slate-50 drop-shadow m-2">
           <%= link_to item_path(wishlist_item.item) do %>
-            <img src="<%= wishlist_item.item.image_url %>" class="w-28 p-1 mr-2">
+            <img src="<%= wishlist_item.item.image_url %>" class="w-28 p-1 mr-2 hover:brightness-125 transition-all">
           <% end %>
           <div class="flex justify-between flex-grow mr-2">
             <div class="flex flex-col grow">
@@ -37,7 +37,7 @@
                       </div>
                       <%= form.hidden_field :quantity, 
                           data: { basket_target: "hiddenQuantity" } %>
-                      <%= form.submit "Add to basket", class: 'ml-2 cursor-pointer' %>
+                      <%= form.submit "Add to basket", class: 'btn-secondary ml-2 cursor-pointer' %>
                     <% end %>
                   </div>
                 </div>
@@ -57,10 +57,10 @@
     <% else %>
       <p class="text-center mt-4">Your Wishlist is empty</p>
     <% end %>
-    <%= link_to 'Continue Shopping', items_path %>
+    <%= link_to 'Continue Shopping', items_path, class: 'btn-secondary m-2' %>
   </div>
 
   <div class="w-full lg:w-1/2">
-    <h1 class="font-bold text-3xl p-1">Another section</h1>
+    <h1 class="font-bold text-3xl p-1 text-darkBlue">Another section</h1>
   </div>
 </div>

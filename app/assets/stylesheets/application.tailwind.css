@@ -48,6 +48,10 @@ html, body {
     @apply bg-darkBlue text-background py-2 px-6 rounded-sm text-lg font-semibold hover:bg-lighterBlue transition-all inline-flex items-center justify-center cursor-pointer;
   }
 
+  .btn-secondary {
+    @apply bg-darkBlue text-background py-1 px-3 rounded-sm text-sm font-medium hover:bg-lighterBlue transition-all inline-flex items-center justify-center cursor-pointer;
+  }
+
   .input-class {
     @apply px-4 py-2 border rounded-sm text-secondaryText focus:outline-none focus:ring-2 focus:ring-darkBlue;
   }
