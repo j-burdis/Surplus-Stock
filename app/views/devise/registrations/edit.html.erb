@@ -52,11 +52,11 @@
     Unhappy? You can cancel your account below:
   </p>
   <div class="text-center">
-    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "text-red-700 underline" %>
+    <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn-tertiary" %>
   </div>
 
   <div class="mt-4 text-center">
-    <%= link_to "Back", root_path, class: "text-darkBlue underline" %>
+    <%= link_to "Back", root_path, class: "btn-secondary" %>
   </div>
 </div>
 
