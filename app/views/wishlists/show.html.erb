@@ -9,16 +9,27 @@
           <% end %>
           <div class="flex justify-between flex-grow mr-2">
             <div class="flex flex-col grow">
+              <div class="flex justify-between">
               <p class="pt-2">
                 <%= link_to item_path(wishlist_item.item) do %>
                   <%= wishlist_item.item.name %>
                 <% end %>
               </p>
+              <div>
+                  <%= button_to wishlist_item_path(wishlist_item),
+                      # 'Remove',
+                      method: :delete,
+                      class: 'mx-2 mt-2 text-red-700 hover:text-red-400',
+                      data: { confirm: 'Are you sure?' } do %>
+                        <i class="fa-solid fa-trash"></i>
+                  <% end %>
+                </div>
+              </div>
               <p class="py-2">
                 £<%= wishlist_item.item.price %> per unit
               </p>
 
-              <div class="flex justify-between items-center pb-2">
+              <div class="flex items-center pb-2">
                 <div>
                   <div class="w-full flex justify-between items-center" data-controller="basket">
                     <%= form_with url: basket_items_path(item_id: wishlist_item.item.id), 
@@ -31,7 +42,7 @@
                               value="1"
                               min="1"
                               max="<%= wishlist_item.item.stock %>"
-                              class="w-16 bg-slate-50"
+                              class="w-16 bg-slate-50 text-center"
                               data-basket-target="quantityInput"
                               data-action="input->basket#updateHiddenQuantity">
                       </div>
@@ -40,13 +51,6 @@
                       <%= form.submit "Add to basket", class: 'btn-secondary ml-2 cursor-pointer' %>
                     <% end %>
                   </div>
-                </div>
-                <div>
-                  <%= button_to 'Remove',
-                      wishlist_item_path(wishlist_item),
-                      method: :delete,
-                      class: 'btn-tertiary',
-                      data: { confirm: 'Are you sure?' } %>
                 </div>
               </div>
             </div>
