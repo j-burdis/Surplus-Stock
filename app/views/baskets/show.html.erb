@@ -28,11 +28,11 @@
                 <% end %>
               </div>
 
-              <div class="flex pt-2">
+              <div class="flex pt-2 items-center">
                 <% if basket_item.item.stock.zero? %>
                   <p class="text-red-500">Out of stock</p>
                   <% else %>
-                  <p>Quantity:&nbsp;</p>
+                  <p class="mb-0.5">Quantity:&nbsp;</p>
                   <%= form_with(model: basket_item, method: :patch,
                       data: { action: "submit->basket#submitForm" }) do |form| %>
                     <%= form.number_field :quantity, 

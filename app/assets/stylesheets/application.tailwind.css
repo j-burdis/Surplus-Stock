@@ -49,7 +49,7 @@ html, body {
   }
 
   .btn-secondary {
-    @apply bg-darkBlue text-background py-1 px-3 rounded-sm text-sm font-medium hover:bg-lighterBlue transition-all inline-flex items-center justify-center cursor-pointer;
+    @apply bg-background text-darkBlue border-2 border-darkBlue py-1 px-3 rounded-xl text-sm font-medium hover:bg-lighterBlue transition-all inline-flex items-center justify-center cursor-pointer;
   }
 
   .btn-tertiary {
