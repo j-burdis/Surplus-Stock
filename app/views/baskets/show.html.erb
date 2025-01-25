@@ -50,13 +50,13 @@
                 <% end %>
               </div>
 
-              <div class="flex items-center">
+              <div class="flex justify-between items-center">
                 <p class="py-2">
                   £<%= basket_item.item.price %> per unit
                 </p>
                 <%# Timer Section %>
                 <% if basket_item.remaining_time > 0 %>
-                  <div class="text-sm text-secondaryText py-2 pl-3">
+                  <div class="text-sm text-secondaryText py-2 pr-2">
                     Time left: 
                     <span id="timer-<%= basket_item.id %>"
                           data-timer-target="timer" 
@@ -105,6 +105,10 @@
             </li>
           <% end %>
         </ul>
+        <div class="flex justify-between py-1">
+          <span>Delivery fee:</span>
+          <span>£<%= @delivery %></span>
+        </div>
         <div class="flex justify-between font-bold text-lg pt-2">
           <span>Total:</span>
           <span>£<%= @pending_order.total_amount %></span>
@@ -112,12 +116,12 @@
         <div class="flex justify-between mt-4" id="payment-actions">
           <%= link_to 'Resume Payment',
                       new_order_payment_path(@pending_order),
-                      class: 'btn-primary text-center',
+                      class: 'btn-primary text-center whitespace-nowrap mr-2',
                       data: { 
                         disable: @pending_order.time_left <= 0 ? true : false 
                       } %>
           <div class="flex flex-col items-start">
-            <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'btn-tertiary mt-2', data: { confirm: 'Are you sure you want to cancel this order?' } %>
+            <%= button_to 'Cancel Order', cancel_order_path(@pending_order), method: :delete, class: 'btn-tertiary', data: { confirm: 'Are you sure you want to cancel this order?' } %>
             <p class="text-center text-secondaryText text-xs">Items are still saved <br> to your basket</p>
           </div>
         </div>
