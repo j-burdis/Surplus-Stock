@@ -5,17 +5,17 @@
       <% @wishlist_items.each do |wishlist_item| %>
         <div class="flex items-center bg-slate-50 drop-shadow m-2">
           <%= link_to item_path(wishlist_item.item) do %>
-            <img src="<%= wishlist_item.item.image_url %>" class="w-28 p-1 mr-2 hover:brightness-125 transition-all">
+            <img src="<%= wishlist_item.item.image_url %>" class="w-28 h-28 flex-shrink-0 object-contain p-1 mr-2 hover:brightness-125 transition-all">
           <% end %>
           <div class="flex justify-between flex-grow mr-2">
-            <div class="flex flex-col grow">
-              <div class="flex justify-between">
-              <p class="pt-2">
-                <%= link_to item_path(wishlist_item.item) do %>
-                  <%= wishlist_item.item.name %>
-                <% end %>
-              </p>
-              <div>
+            <div class="flex flex-col flex-grow">
+              <div class="flex justify-between items-start">
+                <p class="pt-2">
+                  <%= link_to item_path(wishlist_item.item) do %>
+                    <%= wishlist_item.item.name %>
+                  <% end %>
+                </p>
+                <div>
                   <%= button_to wishlist_item_path(wishlist_item),
                       # 'Remove',
                       method: :delete,
@@ -25,11 +25,9 @@
                   <% end %>
                 </div>
               </div>
-              <p class="py-2">
-                £<%= wishlist_item.item.price %> per unit
-              </p>
+              
 
-              <div class="flex items-center pb-2">
+              <div class="flex items-center py-2">
                 <div>
                   <div class="w-full flex justify-between items-center" data-controller="basket">
                     <%= form_with url: basket_items_path(item_id: wishlist_item.item.id), 
@@ -42,7 +40,7 @@
                               value="1"
                               min="1"
                               max="<%= wishlist_item.item.stock %>"
-                              class="w-16 bg-slate-50 text-center"
+                              class="w-12 bg-slate-50 text-center"
                               data-basket-target="quantityInput"
                               data-action="input->basket#updateHiddenQuantity">
                       </div>
@@ -53,6 +51,9 @@
                   </div>
                 </div>
               </div>
+              <p class="pb-2">
+                £<%= wishlist_item.item.price %> per unit
+              </p>
             </div>
             
           </div>

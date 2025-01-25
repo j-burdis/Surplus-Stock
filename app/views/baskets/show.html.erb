@@ -1,6 +1,6 @@
 <div class="p-4 flex flex-col lg:flex-row" data-controller="timer page-refresh">
   <div class="w-full lg:w-1/2">
-    <h1 class="font-bold text-3xl p-1 text-darkBlue">My basket</h1>
+    <h1 class="font-bold text-3xl p-1 text-darkBlue">My Basket</h1>
     <% if @basket_items.any? %>
       <% @basket_items.each do |basket_item| %>
         <div class="flex items-center bg-slate-50 drop-shadow m-2" data-controller="basket">
@@ -38,7 +38,7 @@
                         # min: 1, 
                         max: basket_item.item.stock, 
                         value: basket_item.quantity, 
-                        class: 'w-16 bg-slate-50 text-center', 
+                        class: 'w-12 bg-slate-50 text-center', 
                         data: { 
                           basket_target: "quantityInput", 
                           action: "input->basket#validateQuantity" 
@@ -54,7 +54,7 @@
                 </p>
                 <%# Timer Section %>
                 <% if basket_item.remaining_time > 0 %>
-                  <div class="text-sm text-secondaryText py-2 pl-4">
+                  <div class="text-sm text-secondaryText py-2 pl-3">
                     Time left: 
                     <span id="timer-<%= basket_item.id %>"
                           data-timer-target="timer" 
