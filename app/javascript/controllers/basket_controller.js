@@ -71,7 +71,19 @@ export default class extends Controller {
     })
     .then(response => response.json())
     .then(data => {
-      this.showNotification(data.message, data.success)
+      const flashContainer = document.querySelector('#flash-messages')
+      if (flashContainer) {
+        flashContainer.innerHTML = `
+        <div class="flash-message flash-${data.flash.type} ${data.flash.type === 'notice' ? 'flash-notice' : 'flash-alert'}" data-controller="flash-message">
+          <span class="flash-message-text">${data.flash.text}</span>
+          <button class="flash-close-btn" data-action="click->flash-message#hideMessage">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `
+      }
+    
+      // this.showNotification(data.message, data.success)
       
       if (data.success) {
         // Check for the hidden _method field instead of form.method
@@ -111,18 +123,18 @@ export default class extends Controller {
       console.error('Error updating order summary:', error)
     })
   }
-
-  showNotification(message, isSuccess) {
-    const notification = document.createElement('div')
-    notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded shadow-lg transition-opacity duration-500 ${
-      isSuccess ? 'bg-green-500' : 'bg-red-500'
-    } text-white`
-    notification.textContent = message
-    document.body.appendChild(notification)
-    
-    setTimeout(() => {
-      notification.style.opacity = '0'
-      setTimeout(() => notification.remove(), 500)
-    }, 3000)
-  }
 }
+
+// showNotification(message, isSuccess) {
+//   const notification = document.createElement('div')
+//   notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded shadow-lg transition-opacity duration-500 ${
+//     isSuccess ? 'bg-lighterBlue' : 'bg-red-400'
+//   } text-white`
+//   notification.textContent = message
+//   document.body.appendChild(notification)
+  
+//   setTimeout(() => {
+//     notification.style.opacity = '0'
+//     setTimeout(() => notification.remove(), 500)
+//   }, 3000)
+// }

@@ -25,11 +25,11 @@ html, body {
 }
 
 .flash-notice {
-  @apply bg-green-500;
+  @apply bg-lighterBlue;
 }
 
 .flash-alert {
-  @apply bg-red-500;
+  @apply bg-red-400;
 }
 
 /* Close button styling */
