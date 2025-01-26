@@ -69,7 +69,16 @@ export default class extends Controller {
       },
       credentials: 'same-origin'
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else if (response.status === 401) {
+        window.location.href = '/users/sign_in';
+        return null;
+      } else {
+        throw new Error('Something went wrong');
+      }
+    })
     .then(data => {
       const flashContainer = document.querySelector('#flash-messages')
       if (flashContainer) {
