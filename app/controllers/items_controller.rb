@@ -1,6 +1,7 @@
 class ItemsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
   before_action :set_item, only: [:show]
+  before_action :store_user_location!, only: %i[index show]
   def index
     # if params[:query].present?
     #   @items = Item.search_by_name_and_description(params[:query])
