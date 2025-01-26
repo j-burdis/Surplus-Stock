@@ -5,7 +5,7 @@
     </div>
     
     <div class="w-full lg:w-2/5 flex flex-col p-2 mx-auto lg:mx-0">
-      <div>
+      <div data-controller="basket">
         <p class="pb-2"><%= @item.name %></p>
         <div class="pb-2 flex items-center">
           <p>
@@ -16,10 +16,10 @@
           </p>
         </div>
         <p class="pb-2"><%= @item.description %></p>
-        <p class="pb-2">Stock remaining: <%= @item.stock%></p>
+        <p class="pb-2" data-basket-target="stockDisplay">Stock remaining: <%= @item.stock%></p>
         <p class="pb-2">Dimensions: </p>
 
-        <div class="w-full pb-2 flex justify-between" data-controller="basket">
+        <div class="w-full pb-2 flex justify-between">
           <%= form_with url: basket_items_path(item_id: @item.id), 
                 method: :post, class: 'flex items-start',
                 data: { action: "submit->basket#submitForm" } do |form| %>

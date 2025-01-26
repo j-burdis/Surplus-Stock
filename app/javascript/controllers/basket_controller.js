@@ -1,10 +1,11 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["quantityInput", "hiddenQuantity"];
+  static targets = ["quantityInput", "hiddenQuantity", "stockDisplay"];
 
   connect() {
     // Ensure hidden input is initially synced with visible input
+    console.log("basket controller connected")
     if (this.hasHiddenQuantityTarget) {
       this.updateHiddenQuantity();
     }
@@ -102,6 +103,8 @@ export default class extends Controller {
         if (httpMethod === 'patch') {
           this.updateOrderSummary()
         }
+
+        this.updateStockDisplay(value)
       }
     })
     .catch(error => {
@@ -131,6 +134,16 @@ export default class extends Controller {
     .catch(error => {
       console.error('Error updating order summary:', error)
     })
+  }
+
+  updateStockDisplay(quantity) {
+    console.log('Updating stock display', this.hasStockDisplayTarget, quantity);
+    if (this.hasStockDisplayTarget) {
+      const stockElement = this.stockDisplayTarget;
+      const currentStock = parseInt(stockElement.textContent.replace(/\D/g, ''), 10);
+      const newStock = currentStock - quantity;
+      stockElement.textContent = `Stock remaining: ${newStock}`;
+    }
   }
 }
 
