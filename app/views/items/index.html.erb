@@ -36,7 +36,10 @@
       <% @items.each do |item| %>
         <%= link_to item_path(item, query: params[:query]) do %>
         <div class="flex flex-col max-w-65 bg-slate-50 drop-shadow transform transition-transform hover:scale-105">
-          <img src="<%= item.image_url %>" class="object-cover mx-2 mt-2 hover:brightness-125 transition-all"/>
+          <%= image_tag item.image_url, 
+            class: "object-cover mx-2 mt-2 hover:brightness-125 transition-all", 
+            loading: "lazy" 
+          %>
           <div class="px-2 py-1">
             <p><%= item.name %></p>
             <p>£<%= item.price %></p>

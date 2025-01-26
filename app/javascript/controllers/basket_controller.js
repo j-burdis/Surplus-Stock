@@ -5,7 +5,6 @@ export default class extends Controller {
 
   connect() {
     // Ensure hidden input is initially synced with visible input
-    console.log("basket controller connected")
     if (this.hasHiddenQuantityTarget) {
       this.updateHiddenQuantity();
     }
@@ -137,7 +136,6 @@ export default class extends Controller {
   }
 
   updateStockDisplay(quantity) {
-    console.log('Updating stock display', this.hasStockDisplayTarget, quantity);
     if (this.hasStockDisplayTarget) {
       const stockElement = this.stockDisplayTarget;
       const currentStock = parseInt(stockElement.textContent.replace(/\D/g, ''), 10);
