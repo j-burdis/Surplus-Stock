@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # Redirect to "My Account" page after a successful update
   def after_update_path_for(resource)
-    my_account_path
+    edit_user_registration_path(resource)
   end
   # before_action :configure_sign_up_params, only: [:create]
   # before_action :configure_account_update_params, only: [:update]
