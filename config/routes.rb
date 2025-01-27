@@ -37,4 +37,6 @@ Rails.application.routes.draw do
       get :success, on: :collection
     end
   end
+
+  get 'api/address_lookup', to: 'addresses#lookup'
 end

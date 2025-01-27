@@ -35,6 +35,70 @@
         <span>£<%= @order.total_amount || 0 %></span>
       </div>
     </div>
+
+    <div>
+      <%= form_with(model: [@order, @order.build_payment], local: true) do |form| %>
+        <% if flash[:alert] %>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+
+        <h1 class="font-bold text-3xl p-1 text-darkBlue">Delivery Address</h1>
+
+        <div class="bg-slate-50 p-2 m-2 drop-shadow" data-controller="address-lookup">
+          <!-- Loading indicator -->
+          <div class="hidden py-2 text-gray-600" data-address-lookup-target="loading">
+            Searching addresses...
+          </div>
+
+          <div class="py-2">
+            <%= form.label :postcode, "Postcode", class: "block mb-1" %>
+            <div class="flex gap-2">
+              <%= form.text_field :postcode,
+                  class: "w-full p-2 border rounded",
+                  data: { 
+                    address_lookup_target: "postcodeInput",
+                    action: "input->address-lookup#searchPostcode"
+                  },
+                  placeholder: "Enter your postcode" %>
+              <button type="button" 
+                      class="btn-secondary"
+                      data-action="click->address-lookup#searchPostcode">
+                Find Address
+              </button>
+            </div>
+          </div>
+
+          <div class="py-2 hidden" data-address-lookup-target="addressSelection">
+            <%= form.label :address, "Select Address", class: "block mb-1" %>
+            <%= form.select :address,
+                [],
+                { prompt: "Select your address" },
+                { 
+                  class: "w-full p-2 border rounded",
+                  data: { 
+                    address_lookup_target: "addressSelect",
+                    action: "change->address-lookup#updateAddress"
+                  }
+                } %>
+          </div>
+
+          <div class="py-2 hidden" data-address-lookup-target="manualAddress">
+            <%= form.label :street_address, "Street Address", class: "block mb-1" %>
+            <%= form.text_field :street_address,
+                class: "w-full p-2 border rounded mb-2",
+                data: { address_lookup_target: "streetInput" } %>
+
+            <%= form.label :city, "City", class: "block mb-1" %>
+            <%= form.text_field :city,
+                class: "w-full p-2 border rounded mb-2",
+                data: { address_lookup_target: "cityInput" } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
     <%= link_to 'Back to basket', basket_path, class: 'btn-secondary m-2' %>
   </div>
 
