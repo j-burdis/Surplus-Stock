@@ -6,19 +6,13 @@ class PaymentsController < ApplicationController
   def new
     @pending_order = current_user.orders.pending.first
     @payment = @order.build_payment
+
+    return unless !@order.recently_created? && !@order.address_complete?
+
+    redirect_to order_path(@order), alert: "Please complete your delivery address"
   end
 
   def create
-    # @payment = @order.build_payment(payment_params)
-
-    # if check_payment_amount && @payment.save && process_payment
-    #   complete_order
-    #   redirect_to success_order_payments_path(@order)
-    # else
-    #   flash[:alert] = "Payment failed. Please try again."
-    #   render :new, status: :unprocessable_entity
-    # end
-
     ActiveRecord::Base.transaction do
       @order.update!(order_params) # Save address information to the order
 

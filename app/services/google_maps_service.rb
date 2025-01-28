@@ -18,11 +18,7 @@ class GoogleMapsService
       url.query = URI.encode_www_form(params)
       response = Net::HTTP.get_response(url)
 
-      Rails.logger.info "Google Maps API Query: #{postcode}, United Kingdom"
-
       data = JSON.parse(response.body)
-      Rails.logger.info "Google Maps API Query: #{postcode}, United Kingdom"
-
       return [] unless data['status'] == 'OK' && data['results'].any?
 
       data['results'].map do |result|
@@ -44,9 +40,7 @@ class GoogleMapsService
           ]
         }
       end
-    rescue StandardError => e
-      Rails.logger.error "Google Maps lookup error: #{e.message}"
-      Rails.logger.error e.backtrace.join("\n")
+    rescue StandardError
       []
     end
   end

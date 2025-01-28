@@ -34,9 +34,22 @@ class Order < ApplicationRecord
     [created_at + EXPIRATION_PERIOD - Time.current, 0].max
   end
 
-  private
+  def address_complete?
+    house_number.present? &&
+      street_address.present? &&
+      city.present? &&
+      display_postcode.present?
+  end
+
+  def recently_created?
+    return true if created_at.nil?
+
+    created_at >= 1.minute.ago
+  end
 
   def address_required?
-    status != "pending"
+    return false if status == "pending" && recently_created?
+
+    true
   end
 end
