@@ -1,40 +1,6 @@
 <div class="p-4 flex flex-col lg:flex-row">
   <div class="w-full lg:w-1/2">
-    <div class="flex items-end" data-controller="timer">
-      <h1 class="font-bold text-3xl p-1 text-darkBlue">Order Summary</h1>
-
-      <%# Timer Section for Pending Order %>
-      <% if @pending_order.time_left > 0 %>
-        <div class="text-sm text-gray-500 pb-1 pl-4">
-          Time left: 
-          <span id="order-timer-<%= @pending_order.id %>"
-                data-timer-target="timer" 
-                data-expiration-time="<%= @pending_order.time_left.to_i %>">
-            Loading...
-          </span>
-        </div>
-      <% end %>
-    </div>
-    <div class="bg-slate-50 p-2 m-2 drop-shadow">
-      <ul class="pb-4">
-        <% @order.order_items.each do |item| %>
-          <li class="flex justify-between border-b py-2">
-            <span><%= item.item.name %> (x<%= item.quantity %>)</span>
-            <span>£<%= (item.price * item.quantity) %></span>
-          </li>
-        <% end %>
-      </ul>
-
-      <div class="flex justify-between py-1">
-        <span>Delivery fee:</span>
-        <span>£<%= @order.delivery_fee %></span>
-      </div>
-
-      <div class="flex justify-between font-bold text-lg border-t pt-2">
-        <span>Total:</span>
-        <span>£<%= @order.total_amount || 0 %></span>
-      </div>
-    </div>
+    
 
     <div>
       <%= form_with(model: [@order, @order.build_payment], local: true) do |form| %>
@@ -85,15 +51,26 @@
           </div>
 
           <div class="py-2 hidden" data-address-lookup-target="manualAddress">
-            <%= form.label :street_address, "Street Address", class: "block mb-1" %>
+            <%= form.label :house_number, "House Name/Number", class: "block mb-1" %>
+            <%= form.text_field :house_number,
+                class: "w-full p-2 border rounded mb-2",
+                required: true,
+                data: { address_lookup_target: "houseNumberInput" } %>
+
+            <%= form.label :street_address, "Street", class: "block mb-1" %>
             <%= form.text_field :street_address,
                 class: "w-full p-2 border rounded mb-2",
                 data: { address_lookup_target: "streetInput" } %>
 
-            <%= form.label :city, "City", class: "block mb-1" %>
+            <%= form.label :city, "Town/City", class: "block mb-1" %>
             <%= form.text_field :city,
                 class: "w-full p-2 border rounded mb-2",
                 data: { address_lookup_target: "cityInput" } %>
+
+            <%= form.label :display_postcode, "Postcode", class: "block mb-1" %>
+            <%= form.text_field :display_postcode,
+                class: "w-full p-2 border rounded mb-2",
+                data: { address_lookup_target: "displayPostcodeInput" } %>
           </div>
         </div>
       <% end %>
@@ -103,6 +80,43 @@
   </div>
 
   <div class="w-full lg:w-1/2">
+    <div class="flex items-end" data-controller="timer">
+      <h1 class="font-bold text-3xl p-1 text-darkBlue">Order Summary</h1>
+
+      <%# Timer Section for Pending Order %>
+      <% if @pending_order.time_left > 0 %>
+        <div class="text-sm text-gray-500 pb-1 pl-4">
+          Time left: 
+          <span id="order-timer-<%= @pending_order.id %>"
+                data-timer-target="timer" 
+                data-expiration-time="<%= @pending_order.time_left.to_i %>">
+            Loading...
+          </span>
+        </div>
+      <% end %>
+    </div>
+    <div class="bg-slate-50 p-2 m-2 drop-shadow">
+      <ul class="pb-4">
+        <% @order.order_items.each do |item| %>
+          <li class="flex justify-between border-b py-2">
+            <span><%= item.item.name %> (x<%= item.quantity %>)</span>
+            <span>£<%= (item.price * item.quantity) %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <div class="flex justify-between py-1">
+        <span>Delivery fee:</span>
+        <span>£<%= @order.delivery_fee %></span>
+      </div>
+
+      <div class="flex justify-between font-bold text-lg border-t pt-2">
+        <span>Total:</span>
+        <span>£<%= @order.total_amount || 0 %></span>
+      </div>
+    </div>
+
+
     <h1 class="font-bold text-3xl p-1 text-darkBlue">Payment Details</h1>
     <div class="bg-slate-50 p-2 m-2 drop-shadow">
       <%= form_with(model: [@order, @order.build_payment], local: true) do |form| %>

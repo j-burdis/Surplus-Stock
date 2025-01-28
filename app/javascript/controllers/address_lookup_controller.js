@@ -6,8 +6,10 @@ export default class extends Controller {
     "addressSelect",
     "addressSelection",
     "manualAddress",
+    "houseNumberInput",
     "streetInput",
     "cityInput",
+    "displayPostcodeInput",
     "loading"
   ]
 
@@ -79,6 +81,8 @@ export default class extends Controller {
       this.manualAddressTarget.classList.remove('hidden')
       this.streetInputTarget.value = selectedAddress.street_address || ''
       this.cityInputTarget.value = selectedAddress.city || ''
+      this.displayPostcodeInputTarget.value = selectedAddress.postcode || this.postcodeInputTarget.value
+      this.houseNumberInputTarget.value = ''
       
       // Add hidden input for coordinates if needed
       const coordsInput = document.getElementById('payment_coordinates')
@@ -95,7 +99,9 @@ export default class extends Controller {
     this.manualAddressTarget.classList.remove('hidden')
     this.addressSelectionTarget.classList.add('hidden')
     // Clear any existing values
+    this.houseNumberInputTarget.value = ''
     this.streetInputTarget.value = ''
     this.cityInputTarget.value = ''
+    this.displayPostcodeInputTarget.value = this.postcodeInputTarget.value
   }
 }
