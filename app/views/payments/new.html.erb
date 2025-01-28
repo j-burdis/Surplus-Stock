@@ -1,9 +1,7 @@
 <div class="p-4 flex flex-col lg:flex-row">
   <div class="w-full lg:w-1/2">
-    
-
     <div>
-      <%= form_with(model: [@order, @order.build_payment], local: true) do |form| %>
+      <%= form_with model: @order, id:"addressForm", data: { order_id: @order.id }, local: true do |form| %>
         <% if flash[:alert] %>
           <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <%= flash[:alert] %>
@@ -21,7 +19,7 @@
           <div class="py-2">
             <%= form.label :postcode, "Postcode", class: "block mb-1" %>
             <div class="flex gap-2">
-              <%= form.text_field :postcode,
+              <%= form.text_field :display_postcode,
                   class: "w-full p-2 border rounded",
                   data: { 
                     address_lookup_target: "postcodeInput",
@@ -54,24 +52,32 @@
             <%= form.label :house_number, "House Name/Number", class: "block mb-1" %>
             <%= form.text_field :house_number,
                 class: "w-full p-2 border rounded mb-2",
-                required: true,
+                # required: true,
                 data: { address_lookup_target: "houseNumberInput" } %>
 
             <%= form.label :street_address, "Street", class: "block mb-1" %>
             <%= form.text_field :street_address,
                 class: "w-full p-2 border rounded mb-2",
+                # required: true,
                 data: { address_lookup_target: "streetInput" } %>
 
             <%= form.label :city, "Town/City", class: "block mb-1" %>
             <%= form.text_field :city,
                 class: "w-full p-2 border rounded mb-2",
+                # required: true,
                 data: { address_lookup_target: "cityInput" } %>
 
             <%= form.label :display_postcode, "Postcode", class: "block mb-1" %>
             <%= form.text_field :display_postcode,
                 class: "w-full p-2 border rounded mb-2",
+                # required: true,
                 data: { address_lookup_target: "displayPostcodeInput" } %>
           </div>
+
+          <%= form.submit "Save Address", 
+              type: "button", 
+              id: "saveAddress",
+              class: "btn-secondary mt-4" %>
         </div>
       <% end %>
     </div>
@@ -119,7 +125,7 @@
 
     <h1 class="font-bold text-3xl p-1 text-darkBlue">Payment Details</h1>
     <div class="bg-slate-50 p-2 m-2 drop-shadow">
-      <%= form_with(model: [@order, @order.build_payment], local: true) do |form| %>
+      <%= form_with model: [@order, @payment], id: "paymentForm", url: order_payments_path(@order), local: true do |form| %>
         <% if flash[:alert] %>
           <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <%= flash[:alert] %>

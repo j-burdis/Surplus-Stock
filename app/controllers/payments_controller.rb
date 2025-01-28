@@ -5,17 +5,32 @@ class PaymentsController < ApplicationController
 
   def new
     @pending_order = current_user.orders.pending.first
+    @payment = @order.build_payment
   end
 
   def create
-    @payment = @order.build_payment(payment_params)
+    # @payment = @order.build_payment(payment_params)
 
-    if check_payment_amount && @payment.save && process_payment
-      complete_order
-      redirect_to success_order_payments_path(@order)
-    else
-      flash[:alert] = "Payment failed. Please try again."
-      render :new, status: :unprocessable_entity
+    # if check_payment_amount && @payment.save && process_payment
+    #   complete_order
+    #   redirect_to success_order_payments_path(@order)
+    # else
+    #   flash[:alert] = "Payment failed. Please try again."
+    #   render :new, status: :unprocessable_entity
+    # end
+
+    ActiveRecord::Base.transaction do
+      @order.update!(order_params) # Save address information to the order
+
+      @payment = @order.build_payment(payment_params)
+
+      if check_payment_amount && @payment.save && process_payment
+        complete_order
+        redirect_to success_order_payments_path(@order)
+      else
+        flash[:alert] = "Payment failed. Please try again."
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
@@ -28,6 +43,10 @@ class PaymentsController < ApplicationController
 
   def set_order
     @order = current_user.orders.find(params[:order_id])
+  end
+
+  def order_params
+    params.permit(:house_number, :street_address, :city, :display_postcode)
   end
 
   def payment_params

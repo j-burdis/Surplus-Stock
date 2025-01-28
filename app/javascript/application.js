@@ -2,6 +2,7 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "orders"
+import "address"
 
 document.addEventListener("turbo:load", () => {
   const menuButton = document.getElementById("menu-button");

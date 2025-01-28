@@ -58,6 +58,22 @@ class OrdersController < ApplicationController
     end
   end
 
+  def save_address
+    @order = current_user.orders.find(params[:id]) # Locate the order
+
+    if @order.update(order_params)
+      render json: {
+        success: true,
+        message: "Address saved successfully"
+      }
+    else
+      render json: {
+        success: false,
+        errors: @order.errors.full_messages
+      }, status: :unprocessable_entity
+    end
+  end
+
   def confirmation
     return if @order.paid?
 
@@ -93,5 +109,11 @@ class OrdersController < ApplicationController
     true
   rescue ActiveRecord::RecordInvalid
     false
+  end
+
+  def order_params
+    params.require(:order).permit(
+      :house_number, :street_address, :city, :display_postcode
+    )
   end
 end

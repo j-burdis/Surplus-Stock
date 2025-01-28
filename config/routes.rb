@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     member do
       get :confirmation
       delete :cancel
+      patch :save_address
     end
     resources :payments, only: [:new, :create] do
       get :success, on: :collection

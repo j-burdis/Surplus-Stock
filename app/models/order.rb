@@ -7,6 +7,8 @@ class Order < ApplicationRecord
   validates :total_amount, presence: true, numericality: { greater_than: 0 }
   validates :delivery_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
+  validates :house_number, :street_address, :city, :display_postcode, presence: true, if: :address_required?
+
   scope :recent, -> { order(created_at: :desc) }
 
   enum status: {
@@ -30,5 +32,11 @@ class Order < ApplicationRecord
 
   def time_left
     [created_at + EXPIRATION_PERIOD - Time.current, 0].max
+  end
+
+  private
+
+  def address_required?
+    status != "pending"
   end
 end
