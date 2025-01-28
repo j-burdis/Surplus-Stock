@@ -5,7 +5,7 @@ class AddressesController < ApplicationController
     postcode = params[:postcode]&.strip
 
     addresses = if postcode.present?
-                  MapboxService.lookup_addresses(postcode)
+                  GoogleMapsService.lookup_addresses(postcode)
                 else
                   []
                 end

@@ -42,7 +42,6 @@ gem "tailwindcss-rails"
 gem "simple_form", github: "heartcombo/simple_form"
 gem "devise"
 gem "pg_search"
-gem 'mapbox-sdk', '~> 2.3.0'
 
 group :development, :test do
   gem "dotenv-rails"
