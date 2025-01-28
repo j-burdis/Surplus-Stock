@@ -1,21 +1,12 @@
 document.addEventListener("turbo:load", function () {
-  console.log("Document loaded");
   const saveAddressButton = document.getElementById("saveAddress");
-  console.log("Save address button:", saveAddressButton);
 
   if (saveAddressButton) {
     saveAddressButton.addEventListener("click", function (e) {
-      console.log("Save button clicked");
       e.preventDefault();
 
       const addressForm = document.getElementById("addressForm");
-      console.log("Address form:", addressForm); 
-      // const formData = new FormData(addressForm);
       const orderId = addressForm.dataset.orderId; // Ensure the form has `data-order-id`
-      console.log("Order ID:", orderId);
-
-      // add authenticity token
-      // formData.append("authenticity_token", document.querySelector("[name='csrf-token']").content);
 
       // Get all the form fields
       const houseNumber = document.querySelector('[name="order[house_number]"]').value;
@@ -43,22 +34,18 @@ document.addEventListener("turbo:load", function () {
         body: JSON.stringify(payload),
       })
       .then(response => {
-        console.log("Response received:", response);
         if (!response.ok) {
           return response.json().then(data => Promise.reject(data));
         }
         return response.json();
       })
       .then((data) => {
-        console.log("Data received:", data);
         const messageDiv = document.createElement("div");
 
         if (data.success) {
           // Show success message
           messageDiv.className = "bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4";
           messageDiv.textContent = data.message || "Address saved successfully";
-          // addressForm.insertBefore(messageDiv, addressForm.firstChild);
-
         } else {
           messageDiv.className = "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4";
           messageDiv.textContent = data.errors ? data.errors.join(", ") : "Error saving address";

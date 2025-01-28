@@ -33,14 +33,12 @@ export default class extends Controller {
       if (!response.ok) throw new Error('Network response was not ok')
 
       const addresses = await response.json()
-      console.log('Received addresses:', addresses)
 
       if (addresses && addresses.length > 0 && addresses.some(addr => addr.formatted_address)) {
         this.addressSelectionTarget.classList.remove('hidden')
         this.addressSelectTarget.innerHTML = '<option value="">Select your address</option>'
         
         addresses.forEach(address => {
-          // console.log('Processing address:', address)
           if (address.formatted_address) {
             const option = document.createElement('option')
             const addressData = {
@@ -49,14 +47,12 @@ export default class extends Controller {
               postcode: address.postcode || '',
               coordinates: address.coordinates || null // Store coordinates if needed later
             }
-            // console.log('Address data for option:', addressData)
             option.value = JSON.stringify(addressData)
             option.textContent = address.formatted_address || 'Unknown address'
             this.addressSelectTarget.appendChild(option)
           }
         })
       } else {
-        console.log('No addresses found')
         // Show manual input if no addresses found
         this.showManualInput()
       }
