@@ -9,7 +9,7 @@ class PaymentsController < ApplicationController
 
     return unless !@order.recently_created? && !@order.address_complete?
 
-    redirect_to new_order_path(@order), alert: "Please complete your delivery address"
+    redirect_to new_order_payment_path(@order), alert: "Please complete your delivery address"
   end
 
   def create
