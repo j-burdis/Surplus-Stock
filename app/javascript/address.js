@@ -10,11 +10,13 @@ document.addEventListener("turbo:load", function () {
     const city = document.querySelector('[name="order[city]"]').value;
     const displayPostcode = document.querySelector('[name="order[display_postcode]"]').value;
 
+    console.log('Validating address:', { houseNumber, streetAddress, city, displayPostcode });
     return houseNumber && streetAddress && city && displayPostcode;
   }
 
   // Show message function
   function showMessage(message, isError = false) {
+    console.log(`Showing message: ${message} (isError: ${isError})`);
     const messageDiv = document.createElement("div");
     messageDiv.className = isError ? 
       "bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" :
@@ -40,6 +42,7 @@ document.addEventListener("turbo:load", function () {
   if (saveAddressButton) {
     saveAddressButton.addEventListener("click", function (e) {
       e.preventDefault();
+      console.log('Save address button clicked');
 
       if (!validateAddress()) {
         showMessage("Please fill in all address fields", true);
@@ -49,6 +52,7 @@ document.addEventListener("turbo:load", function () {
       const orderId = addressForm.dataset.orderId;
       // const addressForm = document.getElementById("addressForm");
       // const orderId = addressForm.dataset.orderId; // Ensure the form has `data-order-id`
+      console.log('Order ID:', orderId);
       
       // Create the payload
       const payload = {
@@ -60,6 +64,8 @@ document.addEventListener("turbo:load", function () {
         }
       };
 
+      console.log('Sending payload:', payload);
+
       fetch(`/orders/${orderId}/save_address`, {
         method: "PATCH",
         headers: {
@@ -68,19 +74,35 @@ document.addEventListener("turbo:load", function () {
           "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
         },
         body: JSON.stringify(payload),
+        credentials: 'same-origin'
       })
       .then(response => {
-        if (!response.ok) {
-          return response.json().then(data => Promise.reject(data));
-        }
-        return response.json();
+        console.log('Response status:', response.status);
+      //   if (!response.ok) {
+      //     return response.json().then(data => Promise.reject(data));
+      //   }
+      //   return response.json();
+      // })
+      // .then((data) => {
+      //   showMessage(data.message || "Address saved successfully");
+      // })
+      // .catch(error => {
+      //   console.error("Error:", error);
+      //   showMessage(error.errors ? error.errors.join(", ") : "Error saving address", true);
+        return response.json().then(data => {
+          if (!response.ok) {
+            return Promise.reject(data);
+          }
+          return data;
+        });
       })
       .then((data) => {
+        console.log('Success:', data);
         showMessage(data.message || "Address saved successfully");
       })
       .catch(error => {
         console.error("Error:", error);
-        showMessage(error.errors ? error.errors.join(", ") : "Error saving address", true);
+        showMessage(error.errors ? error.errors.join(", ") : "Error saving address", true); 
       });
     });
   }

@@ -1,6 +1,10 @@
 <div class="p-4 text-center">
   <h1 class="font-bold text-3xl">Thank you for your order!</h1>
-  <p>Your order has been successfully placed.</p>
+  <p>
+    Your order has been successfully placed and will be
+    <br> delivered to <%= @order.house_number %>, <%= @order.street_address%>, 
+    <%= @order.city %>, <%= @order.display_postcode %>
+  </p>
   <p>Order ID: <%= @order.id %></p>
   <p>Order Total: £<%= (@order.total_amount) %></p>
 
