@@ -61,29 +61,18 @@ class OrdersController < ApplicationController
   def save_address
     @order = current_user.orders.find(params[:id]) # Locate the order
 
-    Rails.logger.info "Attempting to save address for Order #{@order.id}"
-    Rails.logger.info "Address params: #{order_params.inspect}"
-
     if @order.update(order_params)
-      Rails.logger.info "Successfully saved address for Order #{@order.id}"
-      Rails.logger.info "Updated order attributes: #{@order.reload.attributes.slice('house_number', 'street_address', 'city', 'display_postcode').inspect}"
-
       render json: {
         success: true,
         message: "Address saved successfully"
       }
     else
-      Rails.logger.error "Failed to save address for Order #{@order.id}"
-      Rails.logger.error "Validation errors: #{@order.errors.full_messages}"
       render json: {
         success: false,
         errors: @order.errors.full_messages
       }, status: :unprocessable_entity
     end
-  rescue StandardError => e
-    Rails.logger.error "Exception saving address: #{e.message}"
-    Rails.logger.error e.backtrace.join("\n")
-
+  rescue StandardError
     render json: {
       success: false,
       errors: ["An unexpected error occurred"]
