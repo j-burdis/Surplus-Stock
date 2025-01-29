@@ -7,14 +7,33 @@ class PaymentsController < ApplicationController
     @pending_order = current_user.orders.pending.first
     @payment = @order.build_payment
 
-    return unless !@order.recently_created? && !@order.address_complete?
+    # Check if address is incomplete and order is not recently created
+    if !@order.recently_created? && !@order.address_complete?
+      # Redirect to order path instead of payment path to avoid redirect loop
+      redirect_to order_path(@order), alert: "Please complete your delivery address"
+      return
+    end
 
-    redirect_to new_order_payment_path(@order), alert: "Please complete your delivery address"
+    # Ensure we have a valid order state
+    unless @order&.pending?
+      redirect_to basket_path, alert: "Invalid order state"
+      return
+    end
+
+    # Check if order has expired
+    return unless @order.expired?
+
+    @order.destroy
+    redirect_to basket_path, alert: "Your order has expired. Please create a new order."
+    return
+    # If we reach here, render the new payment form
   end
 
   def create
     ActiveRecord::Base.transaction do
-      @order.update!(order_params) # Save address information to the order
+      # @order.update!(order_params) # Save address information to the order
+      # Only update address if it's provided in params
+      @order.update!(order_params) if order_params.values.any?(&:present?)
 
       @payment = @order.build_payment(payment_params)
 
@@ -26,10 +45,19 @@ class PaymentsController < ApplicationController
         render :new, status: :unprocessable_entity
       end
     end
+  rescue ActiveRecord::RecordInvalid => e
+    flash[:alert] = e.record.errors.full_messages.join(", ")
+    render :new, status: :unprocessable_entity
   end
 
   def success
     @order = Order.find(params[:order_id])
+
+    unless @order.paid?
+      redirect_to order_path(@order), alert: "Order is not paid"
+      return
+    end
+
     redirect_to confirmation_order_path(@order)
   end
 
@@ -37,6 +65,8 @@ class PaymentsController < ApplicationController
 
   def set_order
     @order = current_user.orders.find(params[:order_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to basket_path, alert: "Order not found"
   end
 
   def order_params
