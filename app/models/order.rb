@@ -41,14 +41,8 @@ class Order < ApplicationRecord
       display_postcode.present?
   end
 
-  def recently_created?
-    return true if created_at.nil?
-
-    created_at >= 1.minute.ago
-  end
-
   def address_required?
-    return false if status == "pending" && recently_created?
+    return false if status == "pending"
 
     true
   end

@@ -116,29 +116,18 @@
         </div>
         <div class="flex justify-between mt-4" id="payment-actions">
           <% if @pending_order.time_left <= 0 %>
-            <%# Order has expired %>
             <%= link_to 'Create New Order',
                         basket_path,
                         class: 'btn-primary text-center whitespace-nowrap mr-2 opacity-50 cursor-not-allowed',
                         disabled: true %>
           <% else %>
-            <% if @pending_order.recently_created? || @pending_order.address_complete? %>
-              <%= link_to 'Resume Payment',
-                          new_order_payment_path(@pending_order),
-                          class: 'btn-primary text-center whitespace-nowrap mr-2',
-                          data: { 
-                            turbo: false,
-                            disable_with: "Processing..." 
-                          } %>
-            <% else %>
-              <%= link_to 'Complete Address',
-                          order_path(@pending_order),
-                          class: 'btn-primary text-center whitespace-nowrap mr-2',
-                          data: { 
-                            turbo: false,
-                            disable_with: "Processing..." 
-                          } %>
-            <% end %>
+            <%= link_to 'Resume Payment',
+                        new_order_payment_path(@pending_order),
+                        class: 'btn-primary text-center whitespace-nowrap mr-2',
+                        data: { 
+                          turbo: false,
+                          disable_with: "Processing..." 
+                        } %>
           <% end %>
 
           <div class="flex flex-col items-start">

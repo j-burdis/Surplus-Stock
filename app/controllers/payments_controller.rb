@@ -7,13 +7,6 @@ class PaymentsController < ApplicationController
     @pending_order = current_user.orders.pending.first
     @payment = @order.build_payment
 
-    # Check if address is incomplete and order is not recently created
-    if !@order.recently_created? && !@order.address_complete?
-      # Redirect to order path instead of payment path to avoid redirect loop
-      redirect_to order_path(@order), alert: "Please complete your delivery address"
-      return
-    end
-
     # Ensure we have a valid order state
     unless @order&.pending?
       redirect_to basket_path, alert: "Invalid order state"
