@@ -34,7 +34,7 @@ class PaymentsController < ApplicationController
       # Only update address if it's provided in params
       # @order.update!(order_params) if order_params.values.any?(&:present?)
       if order_params.values.any?(&:present?) && !@order.update(order_params)
-        flash[:alert] = "Please complete all address fields"
+        flash.now[:alert] = "Please complete all address fields"
         render :new, status: :unprocessable_entity
         return
       end
@@ -45,12 +45,12 @@ class PaymentsController < ApplicationController
         complete_order
         redirect_to success_order_payments_path(@order)
       else
-        flash[:alert] = "Payment failed. Please try again."
+        flash.now[:alert] = "Payment failed. Please try again."
         render :new, status: :unprocessable_entity
       end
     end
   rescue ActiveRecord::RecordInvalid => e
-    flash[:alert] = e.record.errors.full_messages.join(", ")
+    flash.now[:alert] = e.record.errors.full_messages.join(", ")
     render :new, status: :unprocessable_entity
   end
 

@@ -42,7 +42,7 @@
                 } %>
           </div>
 
-          <div class="py-2 hidden" data-address-lookup-target="manualAddress">
+          <div class="py-2 <%= @order.address_complete? ? '' : 'hidden' %>" data-address-lookup-target="manualAddress">
             <%= form.label :house_number, "House Name/Number", class: "block mb-1" %>
             <%= form.text_field :house_number,
                 class: "w-full p-2 border rounded mb-2",
