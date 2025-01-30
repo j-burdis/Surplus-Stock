@@ -7,6 +7,12 @@ class PaymentsController < ApplicationController
     @pending_order = current_user.orders.pending.first
     @payment = @order.build_payment
 
+    # Validate address fields
+    if @order.address_required?
+      redirect_to basket_path, alert: "Please complete your delivery address"
+      return
+    end
+
     # Ensure we have a valid order state
     unless @order&.pending?
       redirect_to basket_path, alert: "Invalid order state"
@@ -26,7 +32,12 @@ class PaymentsController < ApplicationController
     ActiveRecord::Base.transaction do
       # @order.update!(order_params) # Save address information to the order
       # Only update address if it's provided in params
-      @order.update!(order_params) if order_params.values.any?(&:present?)
+      # @order.update!(order_params) if order_params.values.any?(&:present?)
+      if order_params.values.any?(&:present?) && !@order.update(order_params)
+        flash[:alert] = "Please complete all address fields"
+        render :new, status: :unprocessable_entity
+        return
+      end
 
       @payment = @order.build_payment(payment_params)
 
@@ -63,7 +74,7 @@ class PaymentsController < ApplicationController
   end
 
   def order_params
-    params.permit(:house_number, :street_address, :city, :display_postcode)
+    params.permit(:house_number, :street_address, :city, :display_postcode, :delivery_date)
   end
 
   def payment_params

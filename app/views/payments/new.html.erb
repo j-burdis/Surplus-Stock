@@ -2,12 +2,6 @@
   <div class="w-full lg:w-1/2">
     <div>
       <%= form_with model: @order, id:"addressForm", data: { order_id: @order.id }, local: true do |form| %>
-        <% if flash[:alert] %>
-          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            <%= flash[:alert] %>
-          </div>
-        <% end %>
-
         <h1 class="font-bold text-3xl p-1 text-darkBlue">Delivery Address</h1>
 
         <div class="bg-slate-50 p-2 m-2 drop-shadow" data-controller="address-lookup">
@@ -109,7 +103,7 @@
       <h1 class="font-bold text-3xl p-1 text-darkBlue">Order Summary</h1>
 
       <%# Timer Section for Pending Order %>
-      <% if @pending_order.time_left > 0 %>
+      <% if @pending_order&.time_left && @pending_order.time_left > 0 %>
         <div class="text-sm text-gray-500 pb-1 pl-4">
           Time left: 
           <span id="order-timer-<%= @pending_order.id %>"
@@ -145,12 +139,6 @@
     <h1 class="font-bold text-3xl p-1 text-darkBlue">Payment Details</h1>
     <div class="bg-slate-50 p-2 m-2 drop-shadow">
       <%= form_with model: [@order, @payment], id: "paymentForm", url: order_payments_path(@order), local: true do |form| %>
-        <%# if flash[:alert] %>
-          <%# <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"> %>
-            <%#= flash[:alert] %>
-          <%# </div> %>
-        <%# end %>
-
           <div class="py-2">
             <%= form.label :card_number, "Card Number", class: "block mb-1" %>
             <%= form.text_field :card_number, 
