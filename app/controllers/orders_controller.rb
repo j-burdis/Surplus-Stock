@@ -79,12 +79,22 @@ class OrdersController < ApplicationController
 
   def save_delivery_date
     if @order.update(delivery_date: params[:order][:delivery_date])
-      render json: { success: true, message: "Delivery date saved successfully" }
+      render json: {
+        success: true,
+        message: "Delivery date saved successfully",
+        delivery_date: @order.delivery_date.strftime('%Y-%m-%d')
+      }
     else
-      render json: { success: false, errors: @order.errors.full_messages }, status: :unprocessable_entity
+      render json: {
+        success: false,
+        errors: @order.errors.full_messages
+      }, status: :unprocessable_entity
     end
   rescue StandardError
-    render json: { success: false, errors: ["An unexpected error occurred"] }, status: :internal_server_error
+    render json: {
+      success: false,
+      errors: ["An unexpected error occurred"]
+    }, status: :internal_server_error
   end
 
   def confirmation

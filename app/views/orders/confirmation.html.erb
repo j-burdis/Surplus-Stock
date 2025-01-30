@@ -4,6 +4,7 @@
     Your order has been successfully placed and will be
     <br> delivered to <%= @order.house_number %>, <%= @order.street_address%>, 
     <%= @order.city %>, <%= @order.display_postcode %>
+    <br> on <%= @order.delivery_date.strftime('%A %e %B') %>
   </p>
   <p>Order ID: <%= @order.id %></p>
   <p>Order Total: £<%= (@order.total_amount) %></p>

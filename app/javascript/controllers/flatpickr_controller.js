@@ -3,10 +3,13 @@ import flatpickr from "flatpickr"
 
 export default class extends Controller {
   connect() {
+    const defaultDate = this.element.value || null;
+
     this.flatpickr = flatpickr(this.element, {
       altInput: true,
       altFormat: "F j, Y",
       dateFormat: "Y-m-d",
+      defaultDate: defaultDate,
       minDate: "today",
       disable: [
         function(date) {
@@ -19,6 +22,7 @@ export default class extends Controller {
           const form = this.element.closest('form');
           if (form) {
             const orderId = form.dataset.orderId;
+            const messagesContainer = document.getElementById('delivery-date-messages');
             
             fetch(`/orders/${orderId}/save_delivery_date`, {
               method: "PATCH",
@@ -31,16 +35,38 @@ export default class extends Controller {
             .then(response => response.json())
             .then(data => {
               if (data.success) {
-                console.log("Delivery date saved successfully");
+                // console.log("Delivery date saved successfully");
+                this.showMessage(messagesContainer, 'success', 'Delivery date saved successfully');
               } else {
-                console.error("Error saving delivery date:", data.errors);
+                // console.error("Error saving delivery date:", data.errors);
+                this.showMessage(messagesContainer, 'error', data.errors.join(", "))
               }
             })
-            .catch(error => console.error("Error:", error));
+            .catch(error => {
+              console.error("Error:", error);
+              this.showMessage(messagesContainer, 'error', 'An error occurred while saving the delivery date');
+            });
           }
         }
       }
     })
+  }
+
+  showMessage(container, type, message) {
+    const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
+    
+    const alertHtml = `
+      <div class="border ${alertClass} px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">${message}</span>
+      </div>
+    `;
+    
+    container.innerHTML = alertHtml;
+    
+    // Clear message after 3 seconds
+    setTimeout(() => {
+      container.innerHTML = '';
+    }, 3000);
   }
 
   disconnect() {
