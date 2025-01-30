@@ -82,6 +82,23 @@
       <% end %>
     </div>
 
+    <div>
+      <h1 class="font-bold text-3xl p-1 text-darkBlue">Delivery Date</h1>
+      
+      <div class="bg-slate-50 p-2 m-2 drop-shadow">
+        <form id="delivery-date-form" data-order-id="<%= @order.id %>">
+          <div class="py-2">
+            <label for="delivery_date" class="block mb-1">Choose a Delivery Date</label>
+            <input type="text" id="delivery_date" name="order[delivery_date]"
+                  class="w-full p-2 border rounded"
+                  placeholder="Select delivery date"
+                  data-controller="flatpickr">
+          </div>
+          <button type="submit" class="btn-secondary my-4">Save Delivery Date</button>
+        </form>
+      </div>
+    </div>
+
     <%= link_to 'Back to basket', basket_path, class: 'btn-secondary m-2' %>
   </div>
 

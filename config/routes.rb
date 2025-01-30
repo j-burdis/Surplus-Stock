@@ -33,6 +33,7 @@ Rails.application.routes.draw do
       get :confirmation
       delete :cancel
       patch :save_address
+      patch :save_delivery_date 
     end
     resources :payments, only: [:new, :create] do
       get :success, on: :collection

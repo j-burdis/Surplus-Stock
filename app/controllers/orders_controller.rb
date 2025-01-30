@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   include OrderCalculations
   before_action :set_basket, only: %i[new create]
-  before_action :set_order, only: %i[show confirmation cancel]
+  before_action :set_order, only: %i[show confirmation cancel save_address save_delivery_date]
   def index
     @orders = current_user.orders.includes(:order_items, :payment)
 
@@ -59,8 +59,6 @@ class OrdersController < ApplicationController
   end
 
   def save_address
-    @order = current_user.orders.find(params[:id]) # Locate the order
-
     if @order.update(order_params)
       render json: {
         success: true,
@@ -77,6 +75,16 @@ class OrdersController < ApplicationController
       success: false,
       errors: ["An unexpected error occurred"]
     }, status: :internal_server_error
+  end
+
+  def save_delivery_date
+    if @order.update(delivery_date: params[:order][:delivery_date])
+      render json: { success: true, message: "Delivery date saved successfully" }
+    else
+      render json: { success: false, errors: @order.errors.full_messages }, status: :unprocessable_entity
+    end
+  rescue StandardError
+    render json: { success: false, errors: ["An unexpected error occurred"] }, status: :internal_server_error
   end
 
   def confirmation
@@ -118,7 +126,7 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(
-      :house_number, :street_address, :city, :display_postcode
+      :house_number, :street_address, :city, :display_postcode, :delivery_date
     )
   end
 end
