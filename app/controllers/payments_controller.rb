@@ -30,9 +30,7 @@ class PaymentsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      # @order.update!(order_params) # Save address information to the order
       # Only update address if it's provided in params
-      # @order.update!(order_params) if order_params.values.any?(&:present?)
       if order_params.values.any?(&:present?) && !@order.update(order_params)
         flash.now[:alert] = "Please complete all address fields"
         render :new, status: :unprocessable_entity
