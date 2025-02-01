@@ -7,17 +7,7 @@
       
       <p class="py-2"><strong>Order ID:</strong> <%= @order.id %></p>
       <p><strong>Order Date:</strong> <%= @order.created_at.strftime('%d %B %Y') %></p>
-      <p><strong>Delivery Address:<br></strong> 
-        <% if @order.house_number.present? %>
-            <%= @order.house_number %>, <%= @order.street_address%>, 
-            <%= @order.city %>, <%= @order.display_postcode %>
-        <% else %>
-          Not specified
-        <% end %>
-      </p>
-      <p>
-
-  </p>
+      
       <p><strong>Delivery Date:</strong> 
         <% if @order.delivery_date.present? %>
           <%= @order.delivery_date.strftime('%d %B %Y') %>
@@ -25,6 +15,24 @@
           Not specified
         <% end %>
       </p>
+      
+      <div class="flex items-start">
+        <div class="font-bold whitespace-nowrap mr-2">
+          <p>Delivery Address:<br>
+        </div>
+          <% if @order.house_number.present? %>
+            <div class="flex-grow">
+              <%= @order.house_number %>, <%= @order.street_address%>, 
+              <%= @order.city %>, <%= @order.display_postcode %>
+            </div>
+          <% else %>
+            <div class="flex-grow">
+              Not specified
+            </div>          
+          <% end %>
+        </p>
+      </div>
+      
       <p class="py-2"><strong>Status:</strong> <%= @order.status.titleize %></p>
       
       <!-- Back to Orders -->
@@ -45,7 +53,7 @@
                  class="w-24 h-24 flex-shrink-0 object-contain p-1 mr-2 hover:brightness-125 transition-all">
           <% end %>
           <div class="flex flex-col flex-grow">
-            <p><%= link_to item.item.name, item_path(item.item), class: "hover:text-blue-500" %></p>
+            <p><%= link_to item.item.name, item_path(item.item), class: "hover:text-lighterBlue" %></p>
             <p>Quantity: <%= item.quantity %></p>
             <p>Price per unit: £<%= item.price %></p>
             <p class="font-bold">Subtotal: £<%= (item.price * item.quantity).round(2) %></p>
