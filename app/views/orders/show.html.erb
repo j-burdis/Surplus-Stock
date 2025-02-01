@@ -62,8 +62,16 @@
       <% end %>
 
       <!-- Total Price -->
-      <div class="bg-slate-50 drop-shadow p-2 mt-4">
-        <p class="font-bold text-lg">Total Amount: £<%= @order.total_amount %> (inc. delivery)</p>
+      <div class="bg-slate-50 drop-shadow p-2 mt-4 flex flex-col md:flex-row justify-between items-center md:items-start">
+        <div class="font-bold text-lg">
+          Total Amount: £<%= @order.total_amount %> (inc. delivery)
+        </div>
+
+        <% if @order.status == "pending" %>
+          <div class="mt-2 md:mt-0">
+            <%= link_to "Resume Payment", new_order_payment_path(@order), class: "btn-primary" %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
