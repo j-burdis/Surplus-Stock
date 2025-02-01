@@ -17,6 +17,7 @@ class OrdersController < ApplicationController
   end
 
   def show
+    @pending_order = @order if @order.status == "pending"
     # Remove expired orders when viewing the order
     return unless @order.expired?
 
@@ -106,7 +107,12 @@ class OrdersController < ApplicationController
   def cancel
     @order.destroy
     flash[:notice] = "Pending order has been cancelled."
-    redirect_to basket_path
+
+    if request.referer.include?(basket_path) # If user came from the basket page
+      redirect_to basket_path
+    else # If user came from the order show page or elsewhere
+      redirect_to orders_path
+    end
   end
 
   private
