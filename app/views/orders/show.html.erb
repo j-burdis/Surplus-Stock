@@ -4,88 +4,13 @@
     <!-- Order Details Section -->
     <div class="w-full lg:w-2/5 flex flex-col p-2 bg-slate-50 drop-shadow">
       <h1 class="font-bold text-3xl text-darkBlue">Order Summary</h1>
-      
-      <p class="py-2"><strong>Order ID:</strong> <%= @order.id %></p>
-      <p><strong>Order Date:</strong> <%= @order.created_at.strftime('%d %B %Y') %></p>
-      
-      <p><strong>Delivery Date:</strong> 
-        <% if @order.delivery_date.present? %>
-          <%= @order.delivery_date.strftime('%d %B %Y') %>
-        <% else %>
-          Not specified
-        <% end %>
-      </p>
-      
-      <div class="flex items-start">
-        <div class="font-bold whitespace-nowrap mr-2">
-          <p>Delivery Address:<br>
-        </div>
-          <% if @order.house_number.present? %>
-            <div class="flex-grow">
-              <%= @order.house_number %>, <%= @order.street_address%>, 
-              <%= @order.city %>, <%= @order.display_postcode %>
-            </div>
-          <% else %>
-            <div class="flex-grow">
-              Not specified
-            </div>          
-          <% end %>
-        </p>
-      </div>
-      
-      <p class="py-2"><strong>Status:</strong> <%= @order.status.titleize %></p>
-      
-      <div class="mt-4 flex justify-between">
-        <div>
-          <%= link_to "Back to Orders", orders_path, class: 'btn-secondary' %>
-        </div>
-
-        <% if @pending_order.present? %>
-          <div class="flex flex-col items-start">
-            <%= button_to 'Cancel Order',
-                          cancel_order_path(@pending_order),
-                          method: :delete,
-                          class: 'btn-tertiary' %>
-                          <%# data: { turbo_confirm: 'Are you sure you want to cancel this order?' }  %>
-            <p class="text-center text-secondaryText text-xs">Items are still saved <br> to your basket</p>
-          </div>
-        <% end %>
-      </div>
-
+      <%= render 'order_details' %>
     </div>
 
     <!-- Ordered Items Section -->
     <div class="w-full lg:w-3/5 p-2 mx-auto">
       <h2 class="font-bold text-2xl text-darkBlue pb-2">Ordered Items</h2>
-
-      <% @order.order_items.each do |item| %>
-        <div class="flex items-center bg-slate-50 drop-shadow p-2 my-2">
-          <%= link_to item_path(item.item) do %>
-            <img src="<%= item.item.image_url %>"
-                 alt="Item image"
-                 class="w-24 h-24 flex-shrink-0 object-contain p-1 mr-2 hover:brightness-125 transition-all">
-          <% end %>
-          <div class="flex flex-col flex-grow">
-            <p><%= link_to item.item.name, item_path(item.item), class: "hover:text-lighterBlue" %></p>
-            <p>Quantity: <%= item.quantity %></p>
-            <p>Price per unit: £<%= item.price %></p>
-            <p class="font-bold">Subtotal: £<%= (item.price * item.quantity).round(2) %></p>
-          </div>
-        </div>
-      <% end %>
-
-      <!-- Total Price -->
-      <div class="bg-slate-50 drop-shadow p-2 mt-4 flex flex-col md:flex-row justify-between items-center md:items-start">
-        <div class="font-bold text-lg">
-          Total Amount: £<%= @order.total_amount %> (inc. delivery)
-        </div>
-
-        <% if @order.status == "pending" %>
-          <div class="mt-2 md:mt-0">
-            <%= link_to "Resume Payment", new_order_payment_path(@order), class: "btn-primary" %>
-          </div>
-        <% end %>
-      </div>
+      <%= render 'ordered_items' %>
     </div>
   </div>
 </div>

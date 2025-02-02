@@ -1,0 +1,28 @@
+<% @order.order_items.each do |item| %>
+  <div class="flex items-center bg-slate-50 drop-shadow p-2 my-2">
+    <%= link_to item_path(item.item) do %>
+      <img src="<%= item.item.image_url %>"
+            alt="Item image"
+            class="w-24 h-24 flex-shrink-0 object-contain p-1 mr-2 hover:brightness-125 transition-all">
+    <% end %>
+    <div class="flex flex-col flex-grow">
+      <p><%= link_to item.item.name, item_path(item.item), class: "hover:text-lighterBlue" %></p>
+      <p>Quantity: <%= item.quantity %></p>
+      <p>Price per unit: £<%= item.price %></p>
+      <p class="font-bold">Subtotal: £<%= (item.price * item.quantity).round(2) %></p>
+    </div>
+  </div>
+<% end %>
+
+<!-- Total Price -->
+<div class="bg-slate-50 drop-shadow p-2 mt-4 flex flex-col md:flex-row justify-between items-center md:items-start">
+  <div class="font-bold text-lg">
+    Total Amount: £<%= @order.total_amount %> (inc. delivery)
+  </div>
+
+  <% if @order.status == "pending" %>
+    <div class="mt-2 md:mt-0">
+      <%= link_to "Resume Payment", new_order_payment_path(@order), class: "btn-primary" %>
+    </div>
+  <% end %>
+</div>
