@@ -29,7 +29,7 @@ class BasketsController < ApplicationController
       format.html
       format.json do
         html = render_to_string(
-          partial: 'order_summary',
+          partial: 'basket_summary',
           formats: [:html],
           layout: false
         )

@@ -18,7 +18,9 @@
     <% if @pending_order %>
       <%= render 'pending_order' %>
     <% elsif @basket_items.any? %>
-      <%= render 'basket_summary' %>
+      <div class="bg-slate-50 p-2 m-2 drop-shadow order-summary">
+        <%= render 'basket_summary' %>
+      </div>
     <% else %>
       <p class="text-center mt-4">No items to checkout</p>
     <% end %>
