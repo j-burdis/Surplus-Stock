@@ -1,0 +1,61 @@
+<div class="bg-slate-50 p-2 m-2 drop-shadow">
+  <div class="flex items-center" data-controller="">
+    <h2 class="text-xl font-semibold pb-2">Pending Order</h2>
+
+    <%# Timer Section for Pending Order %>
+    <% if @pending_order.time_left > 0 %>
+      <div class="text-sm text-secondaryText pb-1 pl-4">
+        Time left: 
+        <span id="order-timer-<%= @pending_order.id %>"
+              data-timer-target="timer" 
+              data-expiration-time="<%= @pending_order.time_left.to_i %>">
+          Loading...
+        </span>
+      </div>
+    <% end %>
+  </div>
+  <ul class="pb-4">
+    <% @pending_order.order_items.each do |order_item| %>
+      <li class="flex justify-between border-b py-2">
+        <span><%= order_item.item.name %> (x<%= order_item.quantity %>)</span>
+        <span>£<%= (order_item.price * order_item.quantity) %></span>
+      </li>
+    <% end %>
+  </ul>
+  <div class="flex justify-between py-1">
+    <span>Delivery fee:</span>
+    <span>£<%= @delivery %></span>
+  </div>
+  <div class="flex justify-between font-bold text-lg pt-2">
+    <span>Total:</span>
+    <span>£<%= @pending_order.total_amount %></span>
+  </div>
+  <div class="flex justify-between mt-4" id="payment-actions">
+    <% if @pending_order.time_left <= 0 %>
+      <%= link_to 'Create New Order',
+                  basket_path,
+                  class: 'btn-primary text-center whitespace-nowrap mr-2 opacity-50 cursor-not-allowed',
+                  disabled: true %>
+    <% else %>
+      <%= link_to 'Resume Payment',
+                  new_order_payment_path(@pending_order),
+                  class: 'btn-primary text-center whitespace-nowrap mr-2',
+                  data: { 
+                    turbo: false,
+                    disable_with: "Processing..." 
+                  } %>
+    <% end %>
+
+    <div class="flex flex-col items-start">
+      <%= button_to 'Cancel Order',
+                    cancel_order_path(@pending_order),
+                    method: :delete,
+                    class: 'btn-tertiary',
+                    data: { 
+                      # turbo_confirm: 'Are you sure you want to cancel this order?',
+                      # disable_with: "Cancelling..."
+                    } %>
+      <p class="text-center text-secondaryText text-xs">Items are still saved <br> to your basket</p>
+    </div>
+  </div>
+</div>

@@ -3,73 +3,7 @@
     <h1 class="font-bold text-3xl p-1 text-darkBlue">My Basket</h1>
     <% if @basket_items.any? %>
       <% @basket_items.each do |basket_item| %>
-        <div class="flex items-center bg-slate-50 drop-shadow m-2" data-controller="basket">
-          <%= link_to item_path(basket_item.item) do %>
-            <img src="<%= basket_item.item.image_url %>"
-                 alt="Item image"
-                 class="w-28 h-28 flex-shrink-0 object-contain p-1 mr-2 hover:brightness-125 transition-all">
-          <% end %>
-          <div class="flex flex-grow justify-between mr-2">
-            <div class="flex flex-col flex-grow">
-              <div class="flex justify-between items-center">
-                <p class="pt-2">
-                  <%= link_to item_path(basket_item.item) do %>
-                    <%= basket_item.item.name %>
-                  <% end %>
-                </p>
-                <div>
-                <%= button_to basket_item_path(basket_item),
-                    # 'Remove all',
-                    method: :delete,
-                    class: 'mx-2 mt-2 text-red-700 hover:text-red-400',
-                    data: { confirm: 'Are you sure?' } do %>
-                      <i class="fa-solid fa-trash"></i>
-                  <% end %>
-                </div>
-                
-              </div>
-
-              <div class="flex pt-2 items-center">
-                <% if basket_item.item.stock.zero? %>
-                  <p class="text-red-500">Out of stock</p>
-                  <% else %>
-                  <p class="mb-0.5">Quantity:&nbsp;</p>
-                  <%= form_with(model: basket_item, method: :patch,
-                      data: { action: "submit->basket#submitForm" }) do |form| %>
-                    <%= form.number_field :quantity, 
-                        # min: 1, 
-                        max: basket_item.item.stock, 
-                        value: basket_item.quantity, 
-                        class: 'w-10 bg-slate-50 text-center', 
-                        data: { 
-                          basket_target: "quantityInput", 
-                          action: "input->basket#validateQuantity" 
-                        } %>
-                    <%= form.submit "Update", class: 'btn-secondary cursor-pointer' %>
-                  <% end %>
-                <% end %>
-              </div>
-
-              <div class="flex justify-between items-center">
-                <p class="py-2">
-                  £<%= basket_item.item.price %> per unit
-                </p>
-                <%# Timer Section %>
-                <% if basket_item.remaining_time > 0 %>
-                  <div class="text-sm text-secondaryText py-2 pr-2">
-                    Time left: 
-                    <span id="timer-<%= basket_item.id %>"
-                          data-timer-target="timer" 
-                          data-expiration-time="<%= basket_item.remaining_time.to_i %>">
-                      Loading...
-                    </span>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-            
-          </div>
-        </div>
+        <%= render 'basket_item', basket_item: basket_item %>
       <% end %>
 
     <% else %>
@@ -82,72 +16,9 @@
     <h1 class="font-bold text-3xl p-1 text-darkBlue">Checkout</h1>
 
     <% if @pending_order %>
-      <div class="bg-slate-50 p-2 m-2 drop-shadow">
-        <div class="flex items-center" data-controller="">
-          <h2 class="text-xl font-semibold pb-2">Pending Order</h2>
-
-          <%# Timer Section for Pending Order %>
-          <% if @pending_order.time_left > 0 %>
-            <div class="text-sm text-secondaryText pb-1 pl-4">
-              Time left: 
-              <span id="order-timer-<%= @pending_order.id %>"
-                    data-timer-target="timer" 
-                    data-expiration-time="<%= @pending_order.time_left.to_i %>">
-                Loading...
-              </span>
-            </div>
-          <% end %>
-        </div>
-        <ul class="pb-4">
-          <% @pending_order.order_items.each do |order_item| %>
-            <li class="flex justify-between border-b py-2">
-              <span><%= order_item.item.name %> (x<%= order_item.quantity %>)</span>
-              <span>£<%= (order_item.price * order_item.quantity) %></span>
-            </li>
-          <% end %>
-        </ul>
-        <div class="flex justify-between py-1">
-          <span>Delivery fee:</span>
-          <span>£<%= @delivery %></span>
-        </div>
-        <div class="flex justify-between font-bold text-lg pt-2">
-          <span>Total:</span>
-          <span>£<%= @pending_order.total_amount %></span>
-        </div>
-        <div class="flex justify-between mt-4" id="payment-actions">
-          <% if @pending_order.time_left <= 0 %>
-            <%= link_to 'Create New Order',
-                        basket_path,
-                        class: 'btn-primary text-center whitespace-nowrap mr-2 opacity-50 cursor-not-allowed',
-                        disabled: true %>
-          <% else %>
-            <%= link_to 'Resume Payment',
-                        new_order_payment_path(@pending_order),
-                        class: 'btn-primary text-center whitespace-nowrap mr-2',
-                        data: { 
-                          turbo: false,
-                          disable_with: "Processing..." 
-                        } %>
-          <% end %>
-
-          <div class="flex flex-col items-start">
-            <%= button_to 'Cancel Order',
-                          cancel_order_path(@pending_order),
-                          method: :delete,
-                          class: 'btn-tertiary',
-                          data: { 
-                            # turbo_confirm: 'Are you sure you want to cancel this order?',
-                            # disable_with: "Cancelling..."
-                          } %>
-            <p class="text-center text-secondaryText text-xs">Items are still saved <br> to your basket</p>
-          </div>
-        </div>
-      </div>
-
+      <%= render 'pending_order' %>
     <% elsif @basket_items.any? %>
-      <div class="bg-slate-50 p-2 m-2 drop-shadow order-summary">
-        <%= render 'order_summary' %>
-      </div>
+      <%= render 'basket_summary' %>
     <% else %>
       <p class="text-center mt-4">No items to checkout</p>
     <% end %>
