@@ -1,0 +1,39 @@
+<div data-controller="basket">
+  <p class="pb-2"><%= @item.name %></p>
+  <div class="pb-2 flex items-center">
+    <p>
+      £<%= @item.price %> &nbsp; &nbsp;
+    </p>
+    <p>
+      <%= button_to "Add to Wishlist", wishlist_items_path(item_id: @item.id), method: :post, class: 'btn-secondary' %>
+    </p>
+  </div>
+  <p class="pb-2"><%= @item.description %></p>
+  <p class="pb-2" data-basket-target="stockDisplay">Stock remaining: <%= @item.stock%></p>
+  <p class="pb-2">Dimensions: </p>
+
+  <div class="w-full pb-2 flex justify-between">
+    <%= form_with url: basket_items_path(item_id: @item.id), 
+          method: :post, class: 'flex items-start',
+          data: { action: "submit->basket#submitForm" } do |form| %>
+      <div class="flex py-2">
+        <p>Quantity:&nbsp;</p>
+        <input type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                max="<%= @item.stock %>"
+                class="w-16 text-center bg-background"
+                data-basket-target="quantityInput"
+                data-action="input->basket#updateHiddenQuantity">
+      </div>
+      <%= form.hidden_field :quantity, 
+          data: { basket_target: "hiddenQuantity" } %>
+      <div class="flex flex-col items-center">
+        <%= form.submit "Add to basket", class: 'btn-primary ml-2' %>
+        <p class="text-center text-secondaryText text-xs">Reserves item for <br> 30 minutes</p>
+      </div>
+    <% end %>
+  </div>
+
+</div>
