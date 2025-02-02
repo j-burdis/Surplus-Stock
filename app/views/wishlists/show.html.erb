@@ -3,63 +3,7 @@
     <h1 class="font-bold text-3xl p-1 text-darkBlue">My Wishlist</h1>
     <% if @wishlist_items.any? %>
       <% @wishlist_items.each do |wishlist_item| %>
-        <div class="flex items-center bg-slate-50 drop-shadow m-2">
-          <%= link_to item_path(wishlist_item.item) do %>
-            <img src="<%= wishlist_item.item.image_url %>"
-                 alt="Item image"
-                 class="w-28 h-28 flex-shrink-0 object-contain p-1 mr-2 hover:brightness-125 transition-all">
-          <% end %>
-          <div class="flex flex-grow justify-between mr-2">
-            <div class="flex flex-col flex-grow">
-              <div class="flex justify-between items-start">
-                <p class="pt-2">
-                  <%= link_to item_path(wishlist_item.item) do %>
-                    <%= wishlist_item.item.name %>
-                  <% end %>
-                </p>
-                <div>
-                  <%= button_to wishlist_item_path(wishlist_item),
-                      # 'Remove',
-                      method: :delete,
-                      class: 'mx-2 mt-2 text-red-700 hover:text-red-400',
-                      data: { confirm: 'Are you sure?' } do %>
-                        <i class="fa-solid fa-trash"></i>
-                  <% end %>
-                </div>
-              </div>
-              
-
-              <div class="flex items-center py-2">
-                <div>
-                  <div class="w-full flex justify-between items-center" data-controller="basket">
-                    <%= form_with url: basket_items_path(item_id: wishlist_item.item.id), 
-                          method: :post, class: 'flex items-center',
-                          data: { action: "submit->basket#submitForm" } do |form| %>
-                      <div class="flex">
-                        <p>Quantity:&nbsp;</p>
-                        <input type="number"
-                              name="quantity"
-                              value="1"
-                              min="1"
-                              max="<%= wishlist_item.item.stock %>"
-                              class="w-10 bg-slate-50 text-center"
-                              data-basket-target="quantityInput"
-                              data-action="input->basket#updateHiddenQuantity">
-                      </div>
-                      <%= form.hidden_field :quantity, 
-                          data: { basket_target: "hiddenQuantity" } %>
-                      <%= form.submit "Add to basket", class: 'btn-secondary ml-2 cursor-pointer' %>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-              <p class="pb-2">
-                £<%= wishlist_item.item.price %> per unit
-              </p>
-            </div>
-            
-          </div>
-        </div>
+        <%= render 'wishlist_item', wishlist_item: wishlist_item %>
       <% end %>
 
     <% else %>
