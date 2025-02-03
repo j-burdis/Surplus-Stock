@@ -1,7 +1,7 @@
 table_lamp:
   id: 1
   name: Table Lamp
-  description: A stylish table lamp with a modern design, perfect for adding a touch of elegance to any space. This lamp features a fabric shade and a sturdy base, making it both functional and aesthetically pleasing.
+  description: A stylish table lamp with a modern design, perfect for adding a touch of elegance to any space.
   price: 49
   stock: 10
   user: alice
@@ -9,7 +9,7 @@ table_lamp:
 mf_lamp:
   id: 2
   name: Modern Floor Lamp
-  description: A sleek and stylish modern floor lamp that fits perfectly in any contemporary setting. It features a minimalist design, providing both functionality and elegance to your living space. The soft, warm light creates a cozy atmosphere, making it ideal for reading or relaxing.
-  price: 599.99
+  description: A sleek and stylish modern floor lamp that fits perfectly in any contemporary setting.
+  price: 129
   stock: 15
   user: bob
