@@ -8,21 +8,25 @@ class BasketItemTest < ActiveSupport::TestCase
   def setup
     @user = users(:alice)
     @item = items(:table_lamp)
-    @basket = @user.basket
-    @basket_item = BasketItem.create(
+    @basket = @user.basket || Basket.create(user: @user)
+  end
+
+  test "basket item is valid with valid attributes" do
+    basket_item = BasketItem.new(
       basket: @basket,
       item: @item,
       quantity: 2
     )
-  end
-
-  test "basket item is valid" do
-    assert @basket_item.valid?
+    assert basket_item.valid?, "BasketItem should be valid with correct attributes"
   end
 
   test "quantity must be positive" do
-    @basket_item.quantity = 0
-    assert_not @basket_item.valid?
+    basket_item = BasketItem.new(
+      basket: @basket,
+      item: @item,
+      quantity: 0
+    )
+    assert_not basket_item.valid?, "BasketItem should be invalid with zero quantity"
   end
 
   test "expired? method works" do
@@ -32,6 +36,6 @@ class BasketItemTest < ActiveSupport::TestCase
       quantity: 1,
       created_at: 1.hour.ago
     )
-    assert old_basket_item.expired?
+    assert old_basket_item.expired?, "BasketItem should be considered expired after 30 minutes"
   end
 end
