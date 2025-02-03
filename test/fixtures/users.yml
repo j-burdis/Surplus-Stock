@@ -9,4 +9,3 @@ bob:
   email: bob@example.com
   name: Bob Smith
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
-  

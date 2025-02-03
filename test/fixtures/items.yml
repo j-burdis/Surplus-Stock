@@ -4,7 +4,7 @@ table_lamp:
   description: A stylish table lamp with a modern design, perfect for adding a touch of elegance to any space.
   price: 49
   stock: 10
-  user: alice
+  user_id: 1  # Explicitly reference the user ID
 
 mf_lamp:
   id: 2
@@ -12,4 +12,4 @@ mf_lamp:
   description: A sleek and stylish modern floor lamp that fits perfectly in any contemporary setting.
   price: 129
   stock: 15
-  user: bob
+  user_id: 2  # Explicitly reference the user ID
