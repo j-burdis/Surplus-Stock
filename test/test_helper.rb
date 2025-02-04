@@ -18,28 +18,40 @@ class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
 
+  # Important: Load fixtures in the correct order
+  def self.fixtures(*fixture_set_names)
+    if fixture_set_names.first == :all
+      # Define explicit loading order
+      fixture_set_names = [
+        :users,    # Load users first since they're referenced by other tables
+        :baskets,  # Load baskets next
+        :items,    # Then items
+        :orders,   # Then orders
+        :basket_items  # Finally basket items
+      ]
+    end
+    super(fixture_set_names)
+  end
+
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
   include Devise::Test::IntegrationHelpers
 
-  # Enhanced debugging setup
-  # setup do
-  #   # Print out detailed information about existing records
-  #   puts "Users in database:"
-  #   User.all.each do |user|
-  #     puts "  ID: #{user.id}, Email: #{user.email}"
-  #   end
-
-  #   puts "\nBaskets in database:"
-  #   Basket.all.each do |basket|
-  #     puts "  ID: #{basket.id}, User ID: #{basket.user_id}"
-  #   end
-
-  #   puts "\nItems in database:"
-  #   Item.all.each do |item|
-  #     puts "  ID: #{item.id}, Name: #{item.name}, User ID: #{item.user_id}"
-  #   end
+  # def before_setup
+  #   # Enable this block temporarily to see what's in the database
+  #   puts "\n=== Database State Before Test ==="
+  #   puts "Users:"
+  #   User.all.each { |u| puts "  ID: #{u.id}, Email: #{u.email}" }
+    
+  #   puts "\nOrders:"
+  #   Order.all.each { |o| puts "  ID: #{o.id}, User ID: #{o.user_id}" }
+    
+  #   puts "\nBaskets:"
+  #   Basket.all.each { |b| puts "  ID: #{b.id}, User ID: #{b.user_id}" }
+    
+  #   puts "============================\n"
+  #   super
   # end
 end

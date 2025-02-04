@@ -1,3 +1,7 @@
 alice_basket:
   id: 1
   user_id: 1  # Explicitly reference the user ID
+
+bob_basket:
+  id: 2
+  user_id: 2

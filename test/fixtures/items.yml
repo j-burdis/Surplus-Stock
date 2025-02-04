@@ -6,7 +6,7 @@ table_lamp:
   stock: 10
   user_id: 1  # Explicitly reference the user ID
 
-mf_lamp:
+floor_lamp:
   id: 2
   name: Modern Floor Lamp
   description: A sleek and stylish modern floor lamp that fits perfectly in any contemporary setting.
