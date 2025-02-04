@@ -18,16 +18,14 @@ class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
 
-  # Important: Load fixtures in the correct order
   def self.fixtures(*fixture_set_names)
     if fixture_set_names.first == :all
-      # Define explicit loading order
       fixture_set_names = [
-        :users,    # Load users first since they're referenced by other tables
-        :baskets,  # Load baskets next
-        :items,    # Then items
-        :orders,   # Then orders
-        :basket_items  # Finally basket items
+        :users,    # load users first since they're referenced by other tables
+        :baskets,
+        :items,
+        :orders,
+        :basket_items
       ]
     end
     super(fixture_set_names)
@@ -36,7 +34,6 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
-  # Add more helper methods to be used by all tests here...
   include Devise::Test::IntegrationHelpers
 
   # def before_setup
