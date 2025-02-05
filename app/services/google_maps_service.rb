@@ -45,15 +45,37 @@ class GoogleMapsService
     end
   end
 
-  class << self
-    def geocode(postcode)
-      # implement google maps geocoding api
-      # returns { lat: float, lng: float}
-    end
+  def self.geocode(postcode)
+    return nil if postcode.blank?
 
-    def find_nearby_postcodes(origin:, radius_miles:)
-      # implement with gmaps distance matrix api
-      # returns array of postcodes within radius
+    begin
+      # Use your existing lookup_addresses method
+      results = lookup_addresses(postcode)
+      return nil if results.empty?
+
+      first_result = results.first
+      {
+        lat: first_result[:coordinates][1],
+        lng: first_result[:coordinates][0]
+      }
+    rescue StandardError => e
+      Rails.logger.error "Geocoding error: #{e.message}"
+      nil
+    end
+  end
+
+  def self.find_nearby_postcodes(origin:, radius_miles:)
+    # Placeholder implementation - you'll want to replace with actual Google Maps API call
+    begin
+      origin_location = geocode(origin)
+      return [] unless origin_location
+
+      # This would typically involve using Google Maps Distance Matrix API
+      # For now, just return an empty array
+      []
+    rescue StandardError => e
+      Rails.logger.error "Nearby postcodes error: #{e.message}"
+      []
     end
   end
 end

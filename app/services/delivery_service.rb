@@ -5,6 +5,7 @@ class DeliveryService
 
   def initialize
     @delivery_postcode = delivery_postcode
+    raise ArgumentError, "Invalid postcode" if @delivery_postcode.blank?
   end
 
   def available_dates
@@ -15,32 +16,38 @@ class DeliveryService
   end
 
   private
+
   def valid_delivery_area?
-    return false unless @delivery_postcode
-
     location = GoogleMapsService.geocode(@delivery_postcode)
-    return false unless location && in_north_east?(location)
+    return false unless location
 
-    true
-  end
-
-  def in_north_east?(location)
-    # rough bounds for NE England
-    ne_bounds = {
+    north_east_bounds = {
       north: 55.811, south: 54.361,
       east: -1.011, west: -2.521
     }
 
-    lat = location[:lat]
-    lng = location[:lng]
-
-    lat.between?(ne_bounds[:south], ne_bounds[:north]) &&
-      lng.between?(ne_bounds[:west], ne_bounds[:east])
+    lat, lng = location.values_at(:lat, :lng)
+    lat.between?(north_east_bounds[:south], north_east_bounds[:north]) &&
+      lng.between?(north_east_bounds[:west], north_east_bounds[:east])
   end
+
+  # def in_north_east?(location)
+  #   # rough bounds for NE England
+  #   ne_bounds = {
+  #     north: 55.811, south: 54.361,
+  #     east: -1.011, west: -2.521
+  #   }
+
+  #   lat = location[:lat]
+  #   lng = location[:lng]
+
+  #   lat.between?(ne_bounds[:south], ne_bounds[:north]) &&
+  #     lng.between?(ne_bounds[:west], ne_bounds[:east])
+  # end
 
   def next_30_business_days
     dates = []
-    date = Date.today
+    date = Date.tomorrow
     while dates.length < 30
       dates << date if business_day?(date)
       date += 1.day
@@ -54,7 +61,8 @@ class DeliveryService
 
   def filter_dates(dates)
     dates.select do |date|
-      deliveries_available?(date) &&
+      business_day?(date) &&
+        deliveries_available?(date) &&
         !recent_delivery_nearby?(date) &&
         compatible_with_route?(date)
     end
@@ -68,11 +76,13 @@ class DeliveryService
   def recent_delivery_nearby?(date)
     nearby_postcodes = find_nearby_postocodes
 
-    Order
-      .where(display_postcode: nearby_postcodes)
-      .where(delivery_date: (date - DELIVERY_BLACKOUT_DAYS.DAYS)..date)
-      .where(status: ['paid', 'processing'])
-      .exists?
+    recent_deliveries = Order
+                        .where(display_postcode: nearby_postcodes)
+                        .where(delivery_date: (date - DELIVERY_BLACKOUT_DAYS.DAYS)..date)
+                        .where(status: ['paid', 'processing'])
+                        .exists?
+
+    recent_deliveries
   end
 
   def find_nearby_postocodes
