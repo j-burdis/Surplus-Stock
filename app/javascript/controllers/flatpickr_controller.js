@@ -3,14 +3,26 @@ import flatpickr from "flatpickr"
 
 export default class extends Controller {
   connect() {
-    const defaultDate = this.element.value || null;
+    const postcode = document.querySelector('[data-address-lookup-target="displayPostcodeInput"]').value
 
+    fetch(`/deliveries/available_dates?postcode=${encodeURIComponent(postcode)}`)
+      .then(response => response.json())
+      .then(data => {
+        this.initializeFlatpickr(data.dates);
+      });
+  }
+
+  initializeFlatpickr(availableDates) {
+
+    const defaultDate = this.element.value || null;
+  
     this.flatpickr = flatpickr(this.element, {
       altInput: true,
       altFormat: "F j, Y",
       dateFormat: "Y-m-d",
       defaultDate: defaultDate,
       minDate: "today",
+      enable: availableDates,
       disable: [
         function(date) {
           // Disable weekends

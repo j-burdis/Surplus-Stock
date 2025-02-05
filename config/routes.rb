@@ -40,5 +40,11 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :deliveries, only: [] do
+    collection do
+      get :available_dates
+    end
+  end
+
   get 'api/address_lookup', to: 'addresses#lookup'
 end
