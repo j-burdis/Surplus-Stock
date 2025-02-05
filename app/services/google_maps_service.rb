@@ -44,4 +44,16 @@ class GoogleMapsService
       []
     end
   end
+
+  class << self
+    def geocode(postcode)
+      # implement google maps geocoding api
+      # returns { lat: float, lng: float}
+    end
+
+    def find_nearby_postcodes(origin:, radius_miles:)
+      # implement with gmaps distance matrix api
+      # returns array of postcodes within radius
+    end
+  end
 end
