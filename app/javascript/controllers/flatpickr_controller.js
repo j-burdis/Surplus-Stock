@@ -6,17 +6,9 @@ export default class extends Controller {
   static targets = ['input']
 
   connect() {
-    console.log("Flatpickr controller connected");
-
     // Verify the input element exists and is correct
     if (!this.element) {
       console.error("No input element found for Flatpickr");
-      return;
-    }
-
-    // Ensure the element is an input
-    if (!(this.element instanceof HTMLInputElement)) {
-      console.error("Flatpickr controller must be applied to an input element");
       return;
     }
 
@@ -29,67 +21,37 @@ export default class extends Controller {
   }
 
   initializeFlatpickr() {
-    console.log("Attempting to initialize Flatpickr");
-
     // Get the current input value safely
     const currentValue = this.element.value || null;
-    console.log("Current input value:", currentValue);
-
     
     const config = {
       altInput: true,
       altFormat: "F j, Y",
       dateFormat: "Y-m-d",
       // defaultDate: defaultDate,
-      minDate: "today", // new Date().fp_incr(1),
+      minDate: "today",
       disable: [
         function(date) {
-          // Disable weekends
-          return date.getDay() === 0 || date.getDay() === 6;
+          // Disable Sunday
+          return date.getDay() === 0;
         }
-      ]
+      ],
       // enable: availableDates.length > 0 ? availableDates : undefined,
-      // onChange: this.handleDateChange.bind(this)
+      onChange: this.handleDateChange.bind(this)
     };
 
-    // Carefully set default date
+    // Set default date if one exists
     if (currentValue) {
-      try {
-        const parsedDate = new Date(currentValue);
-        if (!isNaN(parsedDate.getTime())) {
-          config.defaultDate = parsedDate;
-        }
-      } catch (dateParseError) {
-        console.warn("Could not parse current value as date:", dateParseError);
+      const parsedDate = new Date(currentValue);
+      if (!isNaN(parsedDate.getTime())) {
+        config.defaultDate = parsedDate;
       }
     }
 
-    // Add error handling wrapper around Flatpickr initialization
-    try {
-      this.flatpickr = flatpickr(this.element, {
-        ...config,
-        onReady: (selectedDates, dateStr, instance) => {
-          console.log("Flatpickr is ready");
-        },
-        onError: (error) => {
-          console.error("Flatpickr error:", error);
-        }
-      });
+    this.flatpickr = flatpickr(this.element, config);
 
-      console.log("Flatpickr initialized successfully");
-    } catch (initError) {
-      console.error("Critical Flatpickr initialization error:", initError);
-      
-      // Additional diagnostic information
-      console.log("Element details:", {
-        tagName: this.element.tagName,
-        type: this.element.type,
-        value: this.element.value,
-        attributes: Array.from(this.element.attributes).map(attr => attr.name)
-      });
-
-      throw initError;
-    }
+    // After initialization, fetch available dates based on location
+    this.updateAvailableDates();
   }
   
   async updateAvailableDates(event) {

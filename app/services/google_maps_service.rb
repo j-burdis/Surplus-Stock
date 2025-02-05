@@ -64,7 +64,7 @@ class GoogleMapsService
     end
   end
 
-  def self.find_nearby_postcodes(origin:, radius_miles:)
+  def self.find_nearby_postcodes(origin, radius_miles)
     # Placeholder implementation - you'll want to replace with actual Google Maps API call
     begin
       origin_location = geocode(origin)
