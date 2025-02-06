@@ -17,6 +17,10 @@ class OrdersController < ApplicationController
   end
 
   def show
+    render json: { 
+      address_complete: @order.address_complete?,
+      order: @order 
+    }
     @pending_order = @order if @order.status == "pending"
     # Remove expired orders when viewing the order
     return unless @order.expired?

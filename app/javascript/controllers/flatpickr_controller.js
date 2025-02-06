@@ -50,21 +50,52 @@ export default class extends Controller {
 
     this.flatpickr = flatpickr(this.element, config);
 
-    // After initialization, fetch available dates based on location
-    this.updateAvailableDates();
+    // Get orderId from the form's data attribute
+    const form = this.element.closest('form');
+    if (form && form.dataset.orderId) {
+      this.checkAddressAndFetchDates(form.dataset.orderId);
+    } else {
+      console.warn("No order ID found on form");
+    }
   }
   
-  async updateAvailableDates(event) {
-    const orderId = event.detail?.orderId;
-    if (!orderId) {
-      console.warn("No order ID provided");
-      return;
-    } 
+  // async updateAvailableDates(event) {
+  //   const orderId = event.detail?.orderId;
+  //   if (!orderId) {
+  //     console.warn("No order ID provided");
+  //     return;
+  //   } 
   
-    console.log("Fetching available dates for order:", orderId);
-    await this.fetchAvailableDates(orderId);
-  } catch (error) {
-    console.error("Error updating available dates:", error);
+  //   console.log("Fetching available dates for order:", orderId);
+  //   await this.fetchAvailableDates(orderId);
+  // } catch (error) {
+  //   console.error("Error updating available dates:", error);
+  // }
+
+  async checkAddressAndFetchDates(orderId) {
+    // First check if address is complete
+    try {
+      const response = await fetch(`/orders/${orderId}`, {
+        headers: {
+          'Accept': 'application/json',
+          'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content
+        }
+      });
+
+      const data = await response.json();
+      
+      if (data.address_complete) {
+        await this.fetchAvailableDates(orderId);
+      } else {
+        console.log("Address not complete - skipping date fetch");
+        // Optionally disable the date picker until address is complete
+        if (this.flatpickr) {
+          this.flatpickr.set('disable', [true]); // Disable all dates
+        }
+      }
+    } catch (error) {
+      console.error('Error checking address status:', error);
+    }
   }
 
   async fetchAvailableDates(orderId) {
@@ -76,26 +107,23 @@ export default class extends Controller {
         }
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
-        console.warn("Available dates fetch response not ok:", data);
+        // console.warn("Available dates fetch response not ok:", data);
         if (data.error === "Complete address required") {
+          console.log("Address not complete - date selection disabled");
+          if (this.flatpickr) {
+            this.flatpickr.set('disable', [true]); // Disable all dates
+          }
           // return if address not complete yet
           return;
         }
-        throw new Error('Network response was not ok');
+        throw new Error(data.error || 'Network response was not ok');
       }
 
-      const data = await response.json();
-      console.log("Available dates received:", data.dates);
+      const availableDates = data.dates.map(dateStr => new Date(dateStr));
 
-      // Convert date strings to Date objects
-      const availableDates = data.dates.map(dateStr => {
-        const date = new Date(dateStr);
-        console.log("Parsed date:", date);
-        return date;
-      });
-      
       // update flatpickr with new available dates
       if (this.flatpickr) {
         this.flatpickr.set('enable', availableDates);
@@ -108,6 +136,11 @@ export default class extends Controller {
       }
     } catch (error) {
       console.error('Error fetching available dates:', error);
+      // user-friendly error message
+      const messagesContainer = document.getElementById('delivery-date-messages');
+      if (messagesContainer) {
+        this.showMessage(messagesContainer, 'error', 'Unable to load available delivery dates. Please try again later.');
+      }
     }
   }
 

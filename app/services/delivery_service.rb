@@ -3,7 +3,7 @@ class DeliveryService
   MAX_DAILY_DELIVERIES = 10
   DELIVERY_BLACKOUT_DAYS = 7
 
-  def initialize
+  def initialize(delivery_postcode)
     @delivery_postcode = delivery_postcode
     raise ArgumentError, "Invalid postcode" if @delivery_postcode.blank?
   end
