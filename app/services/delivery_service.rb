@@ -15,7 +15,7 @@ class DeliveryService
     filter_dates(dates)
   rescue StandardError => e
     Rails.logger.error "Error getting available dates: #{e.message}"
-    raise each
+    []
   end
 
   private
@@ -84,7 +84,7 @@ class DeliveryService
 
     recent_deliveries = Order
                         .where(display_postcode: nearby_postcodes)
-                        .where(delivery_date: (date - DELIVERY_BLACKOUT_DAYS.DAYS)..date)
+                        .where(delivery_date: (date - DELIVERY_BLACKOUT_DAYS.days)..date)
                         .where(status: ['paid', 'processing'])
                         .exists?
 
