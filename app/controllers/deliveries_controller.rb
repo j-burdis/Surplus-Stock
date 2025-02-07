@@ -7,16 +7,23 @@ class DeliveriesController < ApplicationController
       return
     end
 
-    service = DeliveryService.new(order.display_postcode)
-    available_dates = service.available_dates
+    begin
+      service = DeliveryService.new(order.display_postcode)
+      available_dates = service.available_dates
 
-    render json: {
-      dates: available_dates.map { |date| date.strftime('%Y-%m-%d') }
-    }
-  rescue StandardError => e
-    render json: {
-      error: "Could not fetch available dates",
-      details: e.message
-    }, status: :unprocessable_entity
+      render json: {
+        dates: available_dates.map { |date| date.strftime('%Y-%m-%d') }
+      }
+    rescue ArgumentError => e
+      render json: {
+        error: "Invalid postcode",
+        details: e.message
+      }, status: :unprocessable_entity
+    rescue StandardError => e
+      render json: {
+        error: "Could not fetch available dates",
+        details: e.message
+      }, status: :unprocessable_entity
+    end
   end
 end

@@ -65,9 +65,12 @@ class OrdersController < ApplicationController
 
   def save_address
     if @order.update(order_params)
+      Rails.logger.info "Address saved: #{@order.attributes.slice('house_number', 'street_address', 'city', 'display_postcode')}"
+      Rails.logger.info "Address complete?: #{@order.address_complete?}"
       render json: {
         success: true,
-        message: "Address saved successfully"
+        message: "Address saved successfully",
+        address_complete: @order.address_complete?
       }
     else
       render json: {
@@ -76,6 +79,7 @@ class OrdersController < ApplicationController
       }, status: :unprocessable_entity
     end
   rescue StandardError
+    Rails.logger.error "Error saving address: #{e.message}"
     render json: {
       success: false,
       errors: ["An unexpected error occurred"]

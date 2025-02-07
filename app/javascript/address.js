@@ -1,3 +1,4 @@
+// app/javascript/address.js
 function initializeAddressForm() {
   const addressForm = document.getElementById("addressForm");
   if (!addressForm) return;
@@ -68,6 +69,9 @@ function initializeSaveAddress(addressForm) {
     })
     .then((data) => {
       showMessage(data.message || "Address saved successfully");
+
+      // trigger calendar update
+      document.dispatchEvent(new CustomEvent('address:saved'));
     })
     .catch(error => {
       console.error("Error:", error);

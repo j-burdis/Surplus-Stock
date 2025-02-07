@@ -13,6 +13,9 @@ class DeliveryService
 
     dates = next_30_business_days
     filter_dates(dates)
+  rescue StandardError => e
+    Rails.logger.error "Error getting available dates: #{e.message}"
+    raise each
   end
 
   private
@@ -29,6 +32,9 @@ class DeliveryService
     lat, lng = location.values_at(:lat, :lng)
     lat.between?(north_east_bounds[:south], north_east_bounds[:north]) &&
       lng.between?(north_east_bounds[:west], north_east_bounds[:east])
+  rescue StandardError => e
+    Rails.logger.error "Error validating delivery area: #{e.message}"
+    false
   end
 
   # def in_north_east?(location)
@@ -74,7 +80,7 @@ class DeliveryService
   end
 
   def recent_delivery_nearby?(date)
-    nearby_postcodes = find_nearby_postocodes
+    nearby_postcodes = find_nearby_postcodes
 
     recent_deliveries = Order
                         .where(display_postcode: nearby_postcodes)
@@ -85,13 +91,14 @@ class DeliveryService
     recent_deliveries
   end
 
-  def find_nearby_postocodes
-    nearby_orders = GoogleMapsService.find_nearby_postocodes(
+  def find_nearby_postcodes
+    GoogleMapsService.find_nearby_postcodes(
       origin: @delivery_postcode,
       radius_miles: 3
     )
-
-    nearby_orders.map(&:display_postcode)
+  rescue StandardError => e
+    Rails.logger.error "Error finding nearby postcodes: #{e.message}"
+    []
   end
 
   def compatible_with_route?(date)

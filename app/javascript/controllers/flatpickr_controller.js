@@ -1,3 +1,4 @@
+// app/javascript/controllers/flatpickr_controller.js
 import { Controller } from "@hotwired/stimulus"
 import flatpickr from "flatpickr"
 
@@ -12,11 +13,18 @@ export default class extends Controller {
       return;
     }
 
-    // Try initialization with explicit error handling
-    try {
-      this.initializeFlatpickr();
-    } catch (error) {
-      console.error("Flatpickr initialization failed:", error);
+    // Initialize Flatpickr with current settings
+    this.initializeFlatpickr();
+
+    // Listen for address changes
+    document.addEventListener('address:saved', this.handleAddressUpdate.bind(this));
+  }
+
+  disconnect() {
+    // Clean up event listeners
+    document.removeEventListener('address:saved', this.handleAddressUpdate.bind(this));
+    if (this.flatpickr) {
+      this.flatpickr.destroy();
     }
   }
 
@@ -54,23 +62,25 @@ export default class extends Controller {
     const form = this.element.closest('form');
     if (form && form.dataset.orderId) {
       this.checkAddressAndFetchDates(form.dataset.orderId);
-    } else {
-      console.warn("No order ID found on form");
-    }
+    } 
   }
   
-  // async updateAvailableDates(event) {
-  //   const orderId = event.detail?.orderId;
-  //   if (!orderId) {
-  //     console.warn("No order ID provided");
-  //     return;
-  //   } 
-  
-  //   console.log("Fetching available dates for order:", orderId);
-  //   await this.fetchAvailableDates(orderId);
-  // } catch (error) {
-  //   console.error("Error updating available dates:", error);
-  // }
+  // Handler for when address is updated
+  async handleAddressUpdate(event) {
+    const orderId = this.element.closest('form')?.dataset.orderId;
+    if (!orderId) return;
+
+    // Clear the current date selection
+    if (this.flatpickr) {
+      this.flatpickr.clear();
+      
+      // Show loading state
+      this.showMessage('Updating available delivery dates...', 'info');
+      
+      // Fetch new available dates
+      await this.checkAddressAndFetchDates(orderId);
+    }
+  }
 
   async checkAddressAndFetchDates(orderId) {
     // First check if address is complete
@@ -87,14 +97,15 @@ export default class extends Controller {
       if (data.address_complete) {
         await this.fetchAvailableDates(orderId);
       } else {
-        console.log("Address not complete - skipping date fetch");
         // Optionally disable the date picker until address is complete
         if (this.flatpickr) {
           this.flatpickr.set('disable', [true]); // Disable all dates
+          this.showMessage('Complete your address to see available delivery dates', 'warning');
         }
       }
     } catch (error) {
       console.error('Error checking address status:', error);
+      this.showMessage('Error checking address status', 'error');
     }
   }
 
@@ -108,11 +119,11 @@ export default class extends Controller {
       });
 
       const data = await response.json();
+      console.log('Available dates response:', data); 
 
       if (!response.ok) {
-        // console.warn("Available dates fetch response not ok:", data);
+        console.log('Response not OK:', response.status, data); 
         if (data.error === "Complete address required") {
-          console.log("Address not complete - date selection disabled");
           if (this.flatpickr) {
             this.flatpickr.set('disable', [true]); // Disable all dates
           }
@@ -122,80 +133,91 @@ export default class extends Controller {
         throw new Error(data.error || 'Network response was not ok');
       }
 
+      // Enable calendar and set available dates
       const availableDates = data.dates.map(dateStr => new Date(dateStr));
 
       // update flatpickr with new available dates
       if (this.flatpickr) {
-        this.flatpickr.set('enable', availableDates);
+        this.flatpickr.set('disable', [
+          function(date) {
+            // Keep Sundays disabled
+            if (date.getDay() === 0) return true;
+            
+            // Check if date is in available dates
+            return !availableDates.some(availableDate => 
+              availableDate.toDateString() === date.toDateString()
+            );
+          }
+        ]);
         
-        // clear if current date is not available
+        // clear previously selected date that's no longer available
         const currentDate = this.flatpickr.selectedDates[0];
         if (currentDate && !data.dates.includes(currentDate.toISOString().split('T')[0])) {
           this.flatpickr.clear();
         }
       }
     } catch (error) {
-      console.error('Error fetching available dates:', error);
-      // user-friendly error message
-      const messagesContainer = document.getElementById('delivery-date-messages');
-      if (messagesContainer) {
-        this.showMessage(messagesContainer, 'error', 'Unable to load available delivery dates. Please try again later.');
-      }
+      console.error('Error details:', error);
+      this.showMessage('Unable to load available delivery dates', 'error');
     }
   }
 
   async handleDateChange(selectedDates, dateStr) {
-    if (selectedDates.length > 0) {
-      const form = this.element.closest('form');
-      if (form) {
-        const orderId = form.dataset.orderId;
-        const messagesContainer = document.getElementById('delivery-date-messages');
-        
-        try {
-          const response = await fetch(`/orders/${orderId}/save_delivery_date`, {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-            },
-            body: JSON.stringify({ order: { delivery_date: dateStr } })
-          });
+    if (selectedDates.length === 0) return;
 
-          const data = await response.json();
-          
-          if (data.success) {
-            this.showMessage(messagesContainer, 'success', 'Delivery date saved successfully');
-          } else {
-            this.showMessage(messagesContainer, 'error', data.errors.join(", "));
-          }
-        } catch (error) {
-          console.error("Error:", error);
-          this.showMessage(messagesContainer, 'error', 'An error occurred while saving the delivery date');
-        }
+    const form = this.element.closest('form');
+    if (!form) return;
+
+    const orderId = form.dataset.orderId;
+    
+    try {
+      const response = await fetch(`/orders/${orderId}/save_delivery_date`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
+        },
+        body: JSON.stringify({ order: { delivery_date: dateStr } })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        this.showMessage('Delivery date saved successfully', 'success');
+      } else {
+        this.showMessage(data.errors.join(", "), 'error');
+        // Clear selection if save failed
+        this.flatpickr.clear();
       }
+    } catch (error) {
+      console.error("Error:", error);
+      this.showMessage('Error saving delivery date', 'error');
+      this.flatpickr.clear();
     }
   }
 
-  showMessage(container, type, message) {
-    const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
-    
-    const alertHtml = `
-      <div class="border ${alertClass} px-4 py-3 rounded relative mb-4" role="alert">
+  showMessage(message, type = 'info' ) {
+    const container = document.getElementById('delivery-date-messages');
+    if (!container) return;
+
+    const classes = {
+      error: 'bg-red-100 border-red-400 text-red-700',
+      success: 'bg-green-100 border-green-400 text-green-700',
+      warning: 'bg-yellow-100 border-yellow-400 text-yellow-700',
+      info: 'bg-blue-100 border-blue-400 text-blue-700'
+    };
+
+    container.innerHTML = `
+      <div class="border ${classes[type]} px-4 py-3 rounded relative mb-4" role="alert">
         <span class="block sm:inline">${message}</span>
       </div>
     `;
     
-    container.innerHTML = alertHtml;
-    
-    // Clear message after 3 seconds
-    setTimeout(() => {
-      container.innerHTML = '';
-    }, 3000);
+    // Clear success message after 3 seconds
+    if (type === 'success') {
+      setTimeout(() => {
+        container.innerHTML = '';
+      }, 3000);
+    }
   }
-
-  // disconnect() {
-  //   if (this.flatpickr) {
-  //     this.flatpickr.destroy()
-  //   }
-  // }
 }
