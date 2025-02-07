@@ -45,7 +45,7 @@ class BasketItemsController < ApplicationController
               type: 'alert',
               text: "Not enough stock available."
             }
-          }
+          }, status: :unprocessable_entity
         end
       end
     end
