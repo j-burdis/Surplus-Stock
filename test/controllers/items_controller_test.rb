@@ -15,4 +15,9 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     get item_url(@item)
     assert_response :success
   end
+
+  test "should return 404 for non-existent item" do
+    get item_url(id: -1)
+    assert_response :not_found
+  end
 end

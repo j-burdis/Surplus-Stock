@@ -51,7 +51,9 @@ class BasketItemsControllerTest < ActionDispatch::IntegrationTest
   #### add method for JSON ####
 
   test "should destroy basket item" do
-    delete basket_item_url(@basket_item)
+    assert_difference("BasketItem.count", -1) do
+      delete basket_item_url(@basket_item)
+    end
     assert_redirected_to basket_path
   end
 end

@@ -6,6 +6,7 @@ require "minitest/reporters"
 require "devise"
 
 Minitest::Reporters.use!(
+  # Minitest::Reporters::SpecReporter.new,
   Minitest::Reporters::DefaultReporter.new(
     show_progress: true,
     color: true
