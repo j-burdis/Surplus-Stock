@@ -65,14 +65,30 @@ class GoogleMapsService
   end
 
   def self.find_nearby_postcodes(origin, radius_miles)
-    # Placeholder implementation - you'll want to replace with actual Google Maps API call
     begin
       origin_location = geocode(origin)
       return [] unless origin_location
 
-      # This would typically involve using Google Maps Distance Matrix API
-      # For now, just return an empty array
-      []
+      radius_meters = radius_miles * 1609.34
+
+      url = URI("https://maps.googleapis.com/maps/api/place/nearbysearch/json")
+      params = {
+        location: "#{origin_location[:lat]},#{origin_location[:lng]}",
+        radius: radius_meters.to_i,
+        type: 'postal_code',
+        key: ENV.fetch('GOOGLE_MAPS_API_KEY', nil)
+      }
+
+      url.query = URI.encode_www_form(params)
+      response = Net::HTTP.get_response(url)
+      data = JSON.parse(response.body)
+
+      if data['status'] == 'OK'
+        data['results'].map { |result| result['vicinity'] }.compact.uniq
+      else
+        Rails.logger.error "Google Places API error: #{data['status']}"
+        []
+      end
     rescue StandardError => e
       Rails.logger.error "Nearby postcodes error: #{e.message}"
       []
