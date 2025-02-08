@@ -2,6 +2,7 @@ class DeliveryService
   DEPOT_POSTCODE = 'NE42 6HD'
   MAX_DAILY_DELIVERIES = 10
   DELIVERY_BLACKOUT_DAYS = 7
+  NEARBY_RADIUS_MILES = 3
 
   def initialize(delivery_postcode)
     @delivery_postcode = delivery_postcode
@@ -20,6 +21,7 @@ class DeliveryService
 
   private
 
+  # check postcode is roguhly in NE England
   def valid_delivery_area?
     location = GoogleMapsService.geocode(@delivery_postcode)
     return false unless location
@@ -36,20 +38,6 @@ class DeliveryService
     Rails.logger.error "Error validating delivery area: #{e.message}"
     false
   end
-
-  # def in_north_east?(location)
-  #   # rough bounds for NE England
-  #   ne_bounds = {
-  #     north: 55.811, south: 54.361,
-  #     east: -1.011, west: -2.521
-  #   }
-
-  #   lat = location[:lat]
-  #   lng = location[:lng]
-
-  #   lat.between?(ne_bounds[:south], ne_bounds[:north]) &&
-  #     lng.between?(ne_bounds[:west], ne_bounds[:east])
-  # end
 
   def next_30_business_days
     dates = []
@@ -79,8 +67,12 @@ class DeliveryService
       .count < MAX_DAILY_DELIVERIES
   end
 
+  # checks recent deliveries within 3 miles - prevents revisiting same area
   def recent_delivery_nearby?(date)
-    nearby_postcodes = find_nearby_postcodes
+    nearby_postcodes = GoogleMapsService.find_nearby_postcodes(
+      origin: @delivery_postcode,
+      radius_miles: NEARBY_RADIUS_MILES
+    )
 
     recent_deliveries = Order
                         .where(display_postcode: nearby_postcodes)
@@ -89,16 +81,6 @@ class DeliveryService
                         .exists?
 
     recent_deliveries
-  end
-
-  def find_nearby_postcodes
-    GoogleMapsService.find_nearby_postcodes(
-      origin: @delivery_postcode,
-      radius_miles: 3
-    )
-  rescue StandardError => e
-    Rails.logger.error "Error finding nearby postcodes: #{e.message}"
-    []
   end
 
   def compatible_with_route?(date)
