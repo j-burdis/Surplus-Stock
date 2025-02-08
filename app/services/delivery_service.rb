@@ -74,13 +74,20 @@ class DeliveryService
       radius_miles: NEARBY_RADIUS_MILES
     )
 
+    Rails.logger.info "Checking deliveries near #{@delivery_postcode}"
+    Rails.logger.info "Found nearby postcodes: #{nearby_postcodes}"
+
+    date_range = (date - DELIVERY_BLACKOUT_DAYS.days)..date
+    Rails.logger.info "Checking date range: #{date_range}"
+
     recent_deliveries = Order
                         .where(display_postcode: nearby_postcodes)
-                        .where(delivery_date: (date - DELIVERY_BLACKOUT_DAYS.days)..date)
+                        .where(delivery_date: date_range)
                         .where(status: ['paid', 'processing'])
-                        .exists?
 
-    recent_deliveries
+    Rails.logger.info "Found recent deliveries: #{recent_deliveries.pluck(:id, :display_postcode, :delivery_date)}"
+
+    recent_deliveries.exists?
   end
 
   def compatible_with_route?(date)
