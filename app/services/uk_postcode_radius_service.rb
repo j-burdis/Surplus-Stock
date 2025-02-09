@@ -1,4 +1,4 @@
-class UKPostcodeRadiusService
+class UkPostcodeRadiusService
   class << self
     def find_nearby_postcodes(origin:, radius_miles:)
       return [] if origin.blank?
