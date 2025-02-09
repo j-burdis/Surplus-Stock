@@ -71,7 +71,7 @@ class GoogleMapsService
     end
 
     def find_nearby_postcodes(origin:, radius_miles:)
-      UKPostcodeRadiusService.find_nearby_postcodes(
+      UkPostcodeRadiusService.find_nearby_postcodes(
         origin: origin,
         radius_miles: radius_miles
       )
