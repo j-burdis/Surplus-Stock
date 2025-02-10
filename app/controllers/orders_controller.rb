@@ -17,24 +17,17 @@ class OrdersController < ApplicationController
   end
 
   def show
-    respond_to do |format|
-      format.html do
-        @pending_order = @order if @order.status == "pending"
+    render json: {
+      address_complete: @order.address_complete?,
+      order: @order
+    }
+    @pending_order = @order if @order.status == "pending"
+    # Remove expired orders when viewing the order
+    return unless @order.expired?
 
-        if @order.expired?
-          @order.destroy
-          flash[:notice] = "Your order has expired and has been removed."
-          redirect_to basket_path and return
-        end
-      end
-
-      format.json do
-        render json: {
-          address_complete: @order.address_complete?,
-          order: @order
-        }
-      end
-    end
+    @order.destroy
+    flash[:notice] = "Your order has expired and has been removed."
+    redirect_to basket_path
   end
 
   def new
