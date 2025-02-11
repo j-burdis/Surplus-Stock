@@ -38,12 +38,14 @@ export default class extends Controller {
       dateFormat: "Y-m-d",
       // defaultDate: defaultDate,
       minDate: "today",
-      disable: [
-        function(date) {
-          // Disable Sunday
-          return date.getDay() === 0;
-        }
-      ],
+      clickOpens: false,
+      disable: [true],
+      // disable: [
+      //   function(date) {
+      //     // Disable Sunday
+      //     return date.getDay() === 0;
+      //   }
+      // ],
       // enable: availableDates.length > 0 ? availableDates : undefined,
       onChange: this.handleDateChange.bind(this)
     };
@@ -73,6 +75,11 @@ export default class extends Controller {
     // Clear the current date selection
     if (this.flatpickr) {
       this.flatpickr.clear();
+
+      // calendar disabled while loading available dates
+      this.flatpickr.set('disable', [true]);
+
+      this.flatpickr.set('clickOpens', false);
       
       // Show loading state
       this.showMessage('Updating available delivery dates...', 'info');
@@ -119,7 +126,7 @@ export default class extends Controller {
       });
 
       const data = await response.json();
-      console.log('Available dates response:', data); 
+      // console.log('Available dates response:', data); 
 
       if (!response.ok) {
         console.log('Response not OK:', response.status, data); 
@@ -138,6 +145,7 @@ export default class extends Controller {
 
       // update flatpickr with new available dates
       if (this.flatpickr) {
+        this.flatpickr.set('clickOpens', true);
         this.flatpickr.set('disable', [
           function(date) {
             // Keep Sundays disabled
@@ -155,10 +163,16 @@ export default class extends Controller {
         if (currentDate && !data.dates.includes(currentDate.toISOString().split('T')[0])) {
           this.flatpickr.clear();
         }
+
+        // clear loading message and show selection prompt
+        this.showMessage('Choose a delivery date', 'warning', false);
       }
     } catch (error) {
       console.error('Error details:', error);
       this.showMessage('Unable to load available delivery dates', 'error');
+      if (this.flatpickr) {
+        this.flatpickr.set('disable', [true]);
+      }
     }
   }
 
@@ -196,7 +210,7 @@ export default class extends Controller {
     }
   }
 
-  showMessage(message, type = 'info' ) {
+  showMessage(message, type = 'info', autoHide = false ) {
     const container = document.getElementById('delivery-date-messages');
     if (!container) return;
 
@@ -214,7 +228,7 @@ export default class extends Controller {
     `;
     
     // Clear success message after 3 seconds
-    if (type === 'success') {
+    if (autoHide || type === 'success') {
       setTimeout(() => {
         container.innerHTML = '';
       }, 3000);
