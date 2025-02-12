@@ -7,63 +7,28 @@ class DeliveryService
   def initialize(delivery_postcode)
     @delivery_postcode = delivery_postcode
     raise ArgumentError, "Invalid postcode" if @delivery_postcode.blank?
+
+    @delivery_zone = determine_delivery_zone
+    Rails.logger.info "Initialized delivery service for postcode: #{@delivery_postcode} in zone: #{@delivery_zone}"
   end
 
   def available_dates
-    Rails.logger.info "Starting available dates calculation for postcode: #{@delivery_postcode}"
+    Rails.logger.info "Starting available dates calculation for postcode: #{@delivery_postcode} in zone: #{@delivery_zone}"
     return [] unless valid_delivery_area?
 
-    # Get nearby deliveries in the next 7 days
-    nearby_delivery_dates = find_nearby_delivery_dates
+    existing_deliveries = find_existing_deliveries
+    Rails.logger.info "Found existing deliveries: #{existing_deliveries.map { |d| "#{d[:postcode]} on #{d[:date]} in zone #{d[:zone]}" }}"
+
+    zone_deliveries = existing_deliveries.select { |d| d[:zone] == @delivery_zone }
+    Rails.logger.info "Deliveries in zone #{@delivery_zone}: #{zone_deliveries.map { |d| d[:date] }}"
+
+    # get nearby deliveries in the next 7 days
+    nearby_delivery_dates = find_nearby_delivery_dates(zone_deliveries)
     Rails.logger.info "Found nearby delivery dates: #{nearby_delivery_dates.map { |d| "#{d[:postcode]} on #{d[:date]}" }}"
 
-    if nearby_delivery_dates.empty?
-      # If no nearby deliveries, return all business days in next 30 days
-      # that have delivery slots available
-      Rails.logger.info "No nearby deliveries found - checking all business days"
-      dates = next_30_business_days
-      available = filter_dates_by_capacity(dates)
-      Rails.logger.info "Available dates after capacity check: #{available.map(&:to_s)}"
-      return available
-    end
-
-    # Group the dates by delivery zones
-    dates_by_zone = nearby_delivery_dates.group_by { |date| determine_delivery_zone(date[:postcode]) }
-    delivery_zone = determine_delivery_zone(@delivery_postcode)
-
-    Rails.logger.info "Customer postcode zone: #{delivery_zone}"
-    Rails.logger.info "Existing delivery dates by zone: #{dates_by_zone.transform_values { |dates| dates.map { |d| d[:date] }}}"
-
-    available_dates = []
-    dates = next_30_business_days
-
-    dates.each do |date|
-      Rails.logger.debug "Checking date: #{date}"
-      # Skip if max deliveries reached
-      # next unless deliveries_available?(date)
-      unless deliveries_available?(date)
-        Rails.logger.debug "#{date} skipped - maximum deliveries reached"
-        next
-      end
-
-      # If there are deliveries in our zone on this date, add it
-      if dates_by_zone[delivery_zone]&.any? { |d| d[:date] == date }
-        Rails.logger.info "#{date} added - matches existing delivery zone"
-        available_dates << date
-        next
-      end
-
-      # If the date is after the blackout period of all nearby deliveries
-      if nearby_delivery_dates.all? { |d| date > d[:date] + DELIVERY_BLACKOUT_DAYS.days }
-        Rails.logger.info "#{date} added - after all blackout periods"
-        available_dates << date
-      else
-        blocking_deliveries = nearby_delivery_dates.select { |d| date <= d[:date] + DELIVERY_BLACKOUT_DAYS.days }
-        Rails.logger.debug "#{date} blocked by deliveries: #{blocking_deliveries.map { |d| "#{d[:postcode]} on #{d[:date]}" }}"
-      end
-    end
-
+    available_dates = calculate_available_dates(nearby_delivery_dates, existing_deliveries)
     Rails.logger.info "Final available dates: #{available_dates.map(&:to_s)}"
+
     available_dates
   rescue StandardError => e
     Rails.logger.error "Error getting available dates: #{e.message}"
@@ -73,37 +38,75 @@ class DeliveryService
 
   private
 
-  def find_nearby_delivery_dates
+  def find_existing_deliveries
+    # get all deliveries for next 30 business days
+    end_date = calculate_end_date
+    date_range = Date.tomorrow..end_date
+
+    Order.where(delivery_date: date_range)
+         .where(status: ['paid', 'processing'])
+         .pluck(:display_postcode, :delivery_date)
+         .map do |postcode, date|
+           {
+             postcode: postcode,
+             date: date,
+             zone: determine_delivery_zone(postcode)
+           }
+         end
+  end
+
+  def calculate_end_date
+    date = Date.tomorrow
+    business_days = 0
+
+    while business_days < 30
+      business_days += 1 unless date.sunday?
+      date += 1.day
+    end
+
+    date - 1.day
+  end
+
+  def find_nearby_delivery_dates(zone_deliveries)
     nearby_postcodes = GoogleMapsService.find_nearby_postcodes(
       origin: @delivery_postcode,
       radius_miles: NEARBY_RADIUS_MILES
     )
 
-    Rails.logger.info "Found nearby postcodes: #{nearby_postcodes}"
-
-    date_range = Date.tomorrow..7.days.from_now
-    Rails.logger.info "Checking date range: #{date_range}"
-
-    # Get all deliveries in nearby postcodes for next 7 days
-    deliveries = Order.where(display_postcode: nearby_postcodes)
-                      .where(delivery_date: date_range)
-                      .where(status: ['paid', 'processing'])
-                      .pluck(:display_postcode, :delivery_date)
-                      .map { |postcode, date| { postcode: postcode, date: date } }
-
-    Rails.logger.info "Found existing deliveries: #{deliveries.map { |d| "#{d[:postcode]} on #{d[:date]}" }}"
-    deliveries
+    zone_deliveries.select { |delivery| nearby_postcodes.include?(delivery[:postcode]) }
   end
 
-  def filter_dates_by_capacity(dates)
-    # dates.select { |date| deliveries_available?(date) }
-    available_dates = dates.select do |date| 
-      available = deliveries_available?(date)
-      Rails.logger.debug "Date #{date} capacity check: #{available ? 'available' : 'full'}"
-      available
+  def calculate_available_dates(nearby_delivery_dates, all_deliveries)
+    available_dates = []
+    dates = next_30_business_days
+
+    dates.each do |date|
+      next unless deliveries_available?(date)
+
+      # check for deliveries in different zones
+      other_zone_delivery = all_deliveries.any? do |delivery|
+        delivery[:date] == date && delivery[:zone] != @delivery_zone
+      end
+
+      # skip if there's a delivery in a different zone
+      next if other_zone_delivery
+
+      # check if date is during a blackout period
+      in_blackout_period = nearby_delivery_dates.any? do |delivery|
+        # skip blackout check if it's the same day
+        next false if delivery[:date] == date
+
+        # check if date falls within blackout period
+        date.between?(delivery[:date] - DELIVERY_BLACKOUT_DAYS.days,
+                      delivery[:date] + DELIVERY_BLACKOUT_DAYS.days)
+      end
+
+      # add date if it's not in a blackout period OR if there's already a nearby delivery on this date
+      if !in_blackout_period || nearby_deliveries.any? { |d| d[:date] == date }
+        available_dates << date
+      end
     end
 
-    Rails.logger.info "Dates after capacity filter: #{available_dates.map(&:to_s)}"
     available_dates
   end
 
@@ -122,11 +125,22 @@ class DeliveryService
   end
 
   def deliveries_available?(date)
-    # Order.where(delivery_date: date, status: ['paid', 'processing'])
-    #      .count < MAX_DAILY_DELIVERIES
     count = Order.where(delivery_date: date, status: ['paid', 'processing']).count
     Rails.logger.debug "Delivery count for #{date}: #{count}/#{MAX_DAILY_DELIVERIES}"
     count < MAX_DAILY_DELIVERIES
+  end
+
+  def determine_delivery_zone(postcode = @delivery_postcode)
+    location = GoogleMapsService.geocode(postcode)
+    depot = GoogleMapsService.geocode(DEPOT_POSTCODE)
+
+    return :unknown unless location && depot
+
+    if location[:lng] > depot[:lng]
+      location[:lat] > 54.96 ? :north_tyne : :south_tyne
+    else
+      :west
+    end
   end
 
   def valid_delivery_area?
@@ -144,18 +158,5 @@ class DeliveryService
   rescue StandardError => e
     Rails.logger.error "Error validating delivery area: #{e.message}"
     false
-  end
-
-  def determine_delivery_zone(postcode = @delivery_postcode)
-    location = GoogleMapsService.geocode(postcode)
-    depot = GoogleMapsService.geocode(DEPOT_POSTCODE)
-
-    return :unknown unless location && depot
-
-    if location[:lng] > depot[:lng]
-      location[:lat] > 54.96 ? :north_tyne : :south_tyne
-    else
-      :west
-    end
   end
 end
