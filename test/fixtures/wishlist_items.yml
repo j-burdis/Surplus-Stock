@@ -1,0 +1,7 @@
+lamp_in_alice_wishlist:
+  wishlist: alice_wishlist
+  item: floor_lamp
+
+lamp_in_bob_wishlist:
+  wishlist: bob_wishlist
+  item: table_lamp

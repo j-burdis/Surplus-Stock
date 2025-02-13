@@ -1,0 +1,7 @@
+alice_wishlist:
+  id: 1
+  user: alice
+
+bob_wishlist:
+  id: 2
+  user: bob
