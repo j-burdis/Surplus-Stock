@@ -11,9 +11,17 @@
           Not specified
         <% end %>
       </p>
-      <p><strong>Status:</strong> <%= order.status.titleize %></p>
+      <p>
+        <strong>Postcode:</strong>
+        <% if order.display_postcode.present? %>
+          <%= order.display_postcode %>
+        <% else %>
+          Not specified
+        <% end %>
+      </p>
     </div>
     <div>
+      <p><strong>Status:</strong> <%= order.status.titleize %></p>
       <p><strong>Total Amount:</strong> £<%= order.total_amount %> (delivery fee inc.)</p>
       <p><strong>Summary:</strong></p>
       <ul>

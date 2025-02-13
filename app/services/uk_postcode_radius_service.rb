@@ -4,8 +4,6 @@ class UkPostcodeRadiusService
       return [] if origin.blank?
 
       begin
-        Rails.logger.info "Finding postcodes near #{origin} within #{radius_miles} miles"
-
         # First, we need to get the latitude and longitude for the origin postcode
         coordinates = get_postcode_coordinates(origin)
         return [] unless coordinates
@@ -20,9 +18,6 @@ class UkPostcodeRadiusService
         })
         url = URI("#{base_url}?#{query_params}")
 
-        Rails.logger.debug "Making request to: #{url}"
-        Rails.logger.debug "Coordinates for request: lat=#{coordinates[:lat]}, lng=#{coordinates[:lng]}"
-
         # Create HTTP request
         http = Net::HTTP.new(url.host, url.port)
         http.use_ssl = true
@@ -35,9 +30,9 @@ class UkPostcodeRadiusService
         Rails.logger.level = :debug
         response = http.request(request)
 
-        # Log the response for debugging
+        # log response for debugging
         Rails.logger.debug "Response code: #{response.code}"
-        Rails.logger.debug "Response body: #{response.body}"
+        # Rails.logger.debug "Response body: #{response.body}"
 
         # Parse and process response
         data = JSON.parse(response.body)
@@ -46,7 +41,6 @@ class UkPostcodeRadiusService
           if data["status"] == 1 && data["output"].is_a?(Array)
             # Handle successful response
             postcodes = data["output"].map { |result| result["postcode"] }
-            Rails.logger.info "Found #{postcodes.length} postcodes within #{radius_miles} miles of #{origin}"
             postcodes.uniq
           else
             Rails.logger.error "API Error: #{data['msg']}"
