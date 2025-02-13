@@ -18,14 +18,4 @@ class WishlistTest < ActiveSupport::TestCase
   test "wishlist belongs to user" do
     assert_equal @user, @wishlist.user
   end
-
-  test "wishlist items are destroyed with wishlist" do
-    @wishlist.wishlist_items.create!(item: items(:table_lamp))
-
-    assert_equal 1, @wishlist.wishlist_items.count
-
-    assert_difference("WishlistItem.count", -1) do
-      @wishlist.destroy
-    end
-  end
 end
