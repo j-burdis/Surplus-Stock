@@ -35,18 +35,6 @@ class BasketItemsControllerTest < ActionDispatch::IntegrationTest
   end
 
   ##### add methods for updating existing basket item quantity via HTML and JSON #######
-
-  # test "cannot add more items than stock via HTML" do
-  #   assert_no_difference "BasketItem.count" do
-  #     post basket_items_url, params: {
-  #       item_id: @item.id,
-  #       quantity: 15 # more than available stock
-  #     }
-  #   end
-
-  #   assert_redirected_to item_path(@item)
-  #   assert_equal "Not enough stock available.", flash[:alert]
-  # end
   
   test "cannot add more items than stock via HTML" do
     assert_no_difference "BasketItem.count" do
@@ -59,9 +47,6 @@ class BasketItemsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to item_path(@item) # redirect back to item page
 
     assert_equal "Not enough stock available.", flash[:alert]
-
-    # @basket_item.reload
-    # assert @basket_item.quantity <= @item.stock, "Basket item quantity should not exceed stock"
   end
 
   test "cannot add more items than stock via JSON" do
