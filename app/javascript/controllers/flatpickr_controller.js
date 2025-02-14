@@ -95,6 +95,7 @@ export default class extends Controller {
       const response = await fetch(`/orders/${orderId}`, {
         headers: {
           'Accept': 'application/json',
+          'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector("meta[name='csrf-token']").content
         }
       });
