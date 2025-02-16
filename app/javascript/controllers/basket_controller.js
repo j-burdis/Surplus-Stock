@@ -5,7 +5,7 @@ export default class extends Controller {
 
   connect() {
     // Ensure hidden input is initially synced with visible input
-    if (this.hasHiddenQuantityTarget) {
+    if (this.hasHiddenQuantityTarget && this.hasQuantityInputTarget) {
       this.updateHiddenQuantity();
     }
   }
@@ -45,17 +45,21 @@ export default class extends Controller {
     event.preventDefault()
 
     const form = event.target
-    const input = this.quantityInputTarget ? this.quantityInputTarget : form.querySelector('input[name="quantity"]')
-    const value = parseInt(input.value, 10);
-    const max = parseInt(input.max, 10);
+    let quantity;
 
-    if (isNaN(value) || value < 1 || value > max) {
-      this.showNotification(`Quantity must be between 1 and ${max}`, false)
-      return
-    }
+    // check if quick add or regular add
+    if (this.hasQuantityInputTarget) {
+      const input = this.quantityInputTarget;
+      quantity = parseInt(input.value, 10);
+      const max = parseInt(input.max, 10);
 
-    if (this.hasHiddenQuantityTarget) {
-      this.updateHiddenQuantity()
+      if (isNaN(quantity) || quantity < 1 || quantity > max) {
+        this.showNotification(`Quantity must be between 1 and ${max}`, false)
+        return
+      }
+    } else {
+      // Quick add - quantity is always 1
+      quantity = 1;
     }
 
     const formData = new FormData(form)
