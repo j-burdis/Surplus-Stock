@@ -2,27 +2,31 @@
   <% @items.each do |item| %>
     <div class="flex flex-col max-w-65 bg-slate-50 drop-shadow transform transition-transform hover:scale-105" 
          data-controller="basket">
-      <%= link_to item_path(item, query: params[:query]) do %>
-        <% if item.image_url.present? %>
-          <%= image_tag item.image_url,
-            class: "object-cover mx-2 mt-2 hover:brightness-125 transition-all",
-            loading: "lazy"
-          %>
-        <% else %>
-          <div class="w-full h-48 bg-gray-200 mx-2 mt-2"></div>
+      <div class="flex-grow">
+        <%= link_to item_path(item, query: params[:query]) do %>
+          <% if item.image_url.present? %>
+            <div class="mx-2 mt-2">
+            <%= image_tag item.image_url,
+              class: "w-full object-cover hover:brightness-125 transition-all",
+              loading: "lazy"
+            %>
+            </div>
+          <% else %>
+            <div class="w-full h-48 bg-gray-200 mx-2 mt-2"></div>
+          <% end %>
+          <div class="px-2 py-1">
+            <p><%= item.name %></p>
+            <p>£<%= item.price %></p>
+          </div>
         <% end %>
-        <div class="px-2 py-1">
-          <p><%= item.name %></p>
-          <p>£<%= item.price %></p>
-        </div>
-      <% end %>
+      </div>
 
       <%= form_with url: basket_items_path(item_id: item.id), 
             method: :post,
             class: 'px-2 pb-2',
             data: { action: "submit->basket#submitForm" } do |form| %>
         <%= form.hidden_field :quantity, value: 1 %>
-        <%= form.submit "Quick Add", class: 'btn-primary w-full' %>
+        <%= form.submit "Quick Add", class: 'btn-secondary' %>
       <% end %>
     </div>
   <% end %>
