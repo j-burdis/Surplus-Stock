@@ -11,7 +11,8 @@ class ItemsController < ApplicationController
     @items = Item.all
 
     # Search functionality
-    @items = @items.where("name ILIKE ?", "%#{params[:query]}%") if params[:query].present?
+    # @items = @items.where("name ILIKE ?", "%#{params[:query]}%")
+    @items = Item.search_by_name_and_description(params[:query]) if params[:query].present?
 
     # Sorting functionality
     case params[:sort_by]
