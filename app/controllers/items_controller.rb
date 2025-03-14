@@ -3,30 +3,38 @@ class ItemsController < ApplicationController
   before_action :set_item, only: [:show]
   before_action :store_user_location!, only: %i[index show]
   def index
-    # if params[:query].present?
-    #   @items = Item.search_by_name_and_description(params[:query])
-    # else
-    #   @items = Item.all
-    # end
-    @items = Item.all
-
     # Search functionality
-    # @items = @items.where("name ILIKE ?", "%#{params[:query]}%")
-    @items = Item.search_by_name_and_description(params[:query]) if params[:query].present?
+    if params[:query].present?
+      @items = Item.search_by_name_and_description(params[:query])
 
-    # Sorting functionality
-    case params[:sort_by]
-    when 'price_asc'
-      @items = @items.order(price: :asc)
-    when 'price_desc'
-      @items = @items.order(price: :desc)
-    when 'name_asc'
-      @items = @items.order(name: :asc)
-    when 'name_desc'
-      @items = @items.order(name: :desc)
+      # apply the order differently for search results
+      case params[:sort_by]
+      when 'price_asc'
+        @items = @items.reorder(price: :asc)
+      when 'price_desc'
+        @items = @items.reorder(price: :desc)
+      when 'name_asc'
+        @items = @items.reorder(name: :asc)
+      when 'name_desc'
+        @items = @items.reorder(name: :desc)
+      end
+    else
+      # get all items with sorting when no search query
+      @items = Item.all
+
+      case params[:sort_by]
+      when 'price_asc'
+        @items = @items.order(price: :asc)
+      when 'price_desc'
+        @items = @items.order(price: :desc)
+      when 'name_asc'
+        @items = @items.order(name: :asc)
+      when 'name_desc'
+        @items = @items.order(name: :desc)
+      end
     end
 
-    # If no results, show a message
+    # show a message if no results
     flash.now[:notice] = "No results found" if @items.empty?
   end
 
