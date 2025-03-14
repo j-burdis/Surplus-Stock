@@ -59,7 +59,7 @@ chair_products = [
     "category": "chair",
     "description": "This contemporary swivel chair combines functionality with style. The 360-degree rotation allows for versatile positioning, while the sleek design fits perfectly in modern interiors. Ideal for home offices or reading nooks.",
     "price": 219.99,
-    "image_path": "https://sofasuk.co.uk/cdn/shop/files/RomeHandmadeSwivelChairAccentPatternedFabricWithSwivelBase.jpg?v=1728812807",
+    "image_path": "https://www.cultfurniture.com/images/emile-swivel-armchair-speckled-stone-sustainable-boucle-p43504-2864025_medium.jpg",
     "stock": 18,
     "discount_price": 199.99
   },
@@ -86,7 +86,7 @@ chair_products = [
     "category": "chair",
     "description": "These elegant bentwood dining chairs combine classic craftsmanship with modern aesthetics. The curved backrest provides excellent support, while the sleek design complements both traditional and contemporary dining spaces.",
     "price": 149.99,
-    "image_path": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIRGI3IqrZ_tfSBXJfbpNj12gCM-YtnqikZw&s",
+    "image_path": "https://www.daals.co.uk/cdn/shop/products/DCH-002-BLACK_main.jpg?v=1669429060",
     "stock": 24,
     "discount_price": 129.99
   }
@@ -98,7 +98,7 @@ table_products = [
     "category": "table",
     "description": "This beautiful farmhouse dining table is crafted from reclaimed wood with a distressed finish. Perfect for family gatherings, it comfortably seats six and brings rustic charm to any dining space.",
     "price": 799.99,
-    "image_path": "https://static.wixstatic.com/media/814138_adb182d7d76e4134ba2962a4ffa71911~mv2.jpeg/v1/fill/w_750,h_563,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/814138_adb182d7d76e4134ba2962a4ffa71911~mv2.jpeg",
+    "image_path": "https://www.ioliving.co.uk/wp-content/uploads/2018/08/Modern-Farmhouse-1.6m-Table-With-Small-Bench-1.jpg",
     "stock": 8,
     "discount_price": 699.99
   },
@@ -107,7 +107,7 @@ table_products = [
     "category": "table",
     "description": "A stunning centerpiece for any living room, this contemporary coffee table features a tempered glass top and minimalist metal frame. The sleek design complements modern interiors while providing functional surface space.",
     "price": 349.99,
-    "image_path": "https://www.everythingbutordinary.co.uk/wp-content/uploads/2022/12/Cattelan-Italia-Helix-Coffee-Table-01.jpeg.webp",
+    "image_path": "https://cdn11.bigcommerce.com/s-hw1ll9udnr/images/stencil/1280x1280/products/2373/2860/JF308-O_0002_Layer_2__35060.1636885561.jpg?c=1",
     "stock": 15,
     "discount_price": 299.99
   },
@@ -116,16 +116,16 @@ table_products = [
     "category": "table",
     "description": "Combining metal and wood elements, this industrial-style side table adds character to any room. The compact size makes it perfect as a bedside table or end table, while the lower shelf provides additional storage.",
     "price": 159.99,
-    "image_path": "https://i.etsystatic.com/21031884/r/il/e3657f/2515754507/il_570xN.2515754507_69d1.jpg",
+    "image_path": "https://www.melodymaison.co.uk/images/P/industrial-side-table-with-magazine-rack_MM31208.jpg",
     "stock": 20,
     "discount_price": 139.99
   },
   {
-    "name": "Expandable Dining Table",
+    "name": "Extending Dining Table",
     "category": "table",
     "description": "This versatile dining table adapts to your needs with an expandable leaf system. Perfect for apartments or homes that occasionally need extra dining space, it transforms from an intimate four-person table to comfortably seating eight.",
     "price": 649.99,
-    "image_path": "https://i.etsystatic.com/13320985/r/il/e64373/4742543425/il_570xN.4742543425_5v4i.jpg",
+    "image_path": "https://www.woods-furniture.co.uk/images/products/standard/7232_21878.jpg",
     "stock": 12,
     "discount_price": 599.99
   },
@@ -191,7 +191,7 @@ sofa_products = [
     "category": "sofa",
     "description": "This versatile sleeper sofa transforms from stylish seating to a comfortable bed for overnight guests. The easy-to-use pull-out mechanism and memory foam mattress ensure a restful night's sleep.",
     "price": 999.99,
-    "image_path": "https://www.thegreatfurnituregroup.co.uk/wp-content/uploads/2024/10/W37-12-016-051-Open-scaled.jpg",
+    "image_path": "https://cottonfy.co.uk/cdn/shop/files/5_e2365c737ffd8b9a73a56caaebdd4f05.jpg?v=1712563594",
     "stock": 12,
     "discount_price": 949.99
   },
@@ -218,7 +218,7 @@ sofa_products = [
     "category": "sofa",
     "description": "This innovative modular sofa allows you to customize your seating arrangement according to your space and needs. The individual pieces can be rearranged to create different configurations, making it perfect for evolving living spaces.",
     "price": 1499.99,
-    "image_path": "https://www.furnipol.co.uk/picture/zdjecia8/narozniki/hugg/hugg_pouf_1_c_1_1_lr/pouf_1_c_1_1_lr_hugg1.webp",
+    "image_path": "https://www.juliettesinteriors.co.uk/wp-content/uploads/2022/06/luxurious-contemporary-modular-corner-sofa-1.jpg",
     "stock": 7,
     "discount_price": 1399.99
   },
@@ -239,7 +239,7 @@ bed_products = [
     "category": "bed",
     "description": "This modern platform bed features a low-profile design with a sturdy wooden frame. The sleek silhouette and clean lines create a contemporary look, while the solid platform eliminates the need for a box spring.",
     "price": 599.99,
-    "image_path": "https://www.getlaidbeds.co.uk/resized/containers/assets/productimages/low-platform-no-hb/low-platform-bed-cinnamon.jpg/7215d6e6ab2720a7063fd18757c4df73/low-platform-bed-cinnamon.jpg",
+    "image_path": "https://pyxis.nymag.com/v1/imgs/066/115/65a3846967be8f98a2a8aa8471a524c9e7.jpg",
     "stock": 12,
     "discount_price": 549.99
   },
@@ -248,7 +248,7 @@ bed_products = [
     "category": "bed",
     "description": "Add luxury to your bedroom with this king-sized upholstered bed. The padded headboard provides comfortable back support for reading in bed, while the premium fabric upholstery creates a sophisticated focal point.",
     "price": 899.99,
-    "image_path": "https://aspirestore.co.uk/57824-large_default/monroe-upholstered-ottoman-bed.jpg",
+    "image_path": "https://m.media-amazon.com/images/I/51JbluW44cL._AC_US1000_.jpg",
     "stock": 8,
     "discount_price": 849.99
   },
@@ -293,7 +293,7 @@ bed_products = [
     "category": "bed",
     "description": "Experience customized comfort with this adjustable bed base that allows you to elevate your head and feet to find your perfect position. Features include wireless remote control, massage functions, and USB charging ports.",
     "price": 1199.99,
-    "image_path": "https://www.getlaidbeds.co.uk/resized/containers/assets/productimages/low-oriental-bed/low-bed-frame-electric-base-standard-res-.jpg/bfc2363ef9a1cabdf91fe3bdad47052c/low-bed-frame-electric-base-standard-res-.jpg",
+    "image_path": "https://i5.walmartimages.com/seo/Cottinch-Adjustable-Bed-Base-Frame-Twin-XL-for-Stress-Management-with-Massage-Remote-Control_4dcb466a-2c9e-44d0-8297-2b89758de499.1c930f1117f183f2b0b97ced2a29712f.jpeg",
     "stock": 7,
     "discount_price": 1099.99
   },

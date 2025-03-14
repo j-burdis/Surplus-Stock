@@ -5,9 +5,9 @@
       <div class="flex-grow">
         <%= link_to item_path(item, query: params[:query]) do %>
           <% if item.image_url.present? %>
-            <div class="mx-2 mt-2">
+            <div class="mx-2 mt-2 h-64 overflow-hidden">
             <%= image_tag item.image_url,
-              class: "w-full object-cover hover:brightness-125 transition-all",
+              class: "w-full object-cover hover:brightness-75 transition-all",
               loading: "lazy"
             %>
             </div>
